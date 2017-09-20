@@ -50,7 +50,7 @@
     },
     "autoload": {
         "psr-4": {
-            "hiapi\\rcptraf": "src"
+            "hiapi\\rcptraf\\": "src"
         }
     },
     "extra": {
