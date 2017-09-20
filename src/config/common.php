@@ -1,16 +1,20 @@
 <?php
 
 return [
-    'components' => [
-        'rcptraf' => [
-            'class' => \hiapi\rcptraf\components\RcpTraf::class,
-        ],
-    ],
     'container' => [
         'definitions' => [
-            'rcptraf:server_traf'   => \hiapi\rcptraf\collectors\ServerTrafCollector::class,
-            'rcptraf:server_traf95' => \hiapi\rcptraf\collectors\ServerTraf95Collector::class,
-            'rcptraf:server_du'     => \hiapi\rcptraf\collectors\ServerDuCollector::class,
+            'rcptraf-tool' => [
+                'class' => \hiapi\rcptraf\tools\RcpTrafTool::class,
+            ],
+            'rcptraf-tool:server_traf' => [
+                'class' => \hiapi\rcptraf\collectors\ServerTrafCollector::class,
+            ],
+            'rcptraf-tool:server_traf95' => [
+                'class' => \hiapi\rcptraf\collectors\ServerTraf95Collector::class,
+            ],
+            'rcptraf-tool:server_du' => [
+                'class' => \hiapi\rcptraf\collectors\ServerDuCollector::class,
+            ],
         ],
     ],
 ];
