@@ -1,10 +1,10 @@
 # hiAPI RCP Traf Collector
 
-[![Latest Stable Version](https://poser.pugx.org/hiqdev/hiapi-rcptraf/v/stable)](https://packagist.org/packages/hiqdev/hiapi-rcptraf)
-[![Total Downloads](https://poser.pugx.org/hiqdev/hiapi-rcptraf/downloads)](https://packagist.org/packages/hiqdev/hiapi-rcptraf)
-[![Build Status](https://img.shields.io/travis/hiqdev/hiapi-rcptraf.svg)](https://travis-ci.org/hiqdev/hiapi-rcptraf)
-[![Scrutinizer Code Coverage](https://img.shields.io/scrutinizer/coverage/g/hiqdev/hiapi-rcptraf.svg)](https://scrutinizer-ci.com/g/hiqdev/hiapi-rcptraf/)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/hiqdev/hiapi-rcptraf.svg)](https://scrutinizer-ci.com/g/hiqdev/hiapi-rcptraf/)
+[![Latest Stable Version](https://poser.pugx.org/hiqdev/hiapi-rcp-traf/v/stable)](https://packagist.org/packages/hiqdev/hiapi-rcp-traf)
+[![Total Downloads](https://poser.pugx.org/hiqdev/hiapi-rcp-traf/downloads)](https://packagist.org/packages/hiqdev/hiapi-rcp-traf)
+[![Build Status](https://img.shields.io/travis/hiqdev/hiapi-rcp-traf.svg)](https://travis-ci.org/hiqdev/hiapi-rcp-traf)
+[![Scrutinizer Code Coverage](https://img.shields.io/scrutinizer/coverage/g/hiqdev/hiapi-rcp-traf.svg)](https://scrutinizer-ci.com/g/hiqdev/hiapi-rcp-traf/)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/hiqdev/hiapi-rcp-traf.svg)](https://scrutinizer-ci.com/g/hiqdev/hiapi-rcp-traf/)
 
 ## Installation
 
@@ -13,13 +13,13 @@ The preferred way to install this yii2-extension is through [composer](http://ge
 Either run
 
 ```sh
-php composer.phar require "hiqdev/hiapi-rcptraf"
+php composer.phar require "hiqdev/hiapi-rcp-traf"
 ```
 
 or add
 
 ```json
-"hiqdev/hiapi-rcptraf": "*"
+"hiqdev/hiapi-rcp-traf": "*"
 ```
 
 to the require section of your composer.json.

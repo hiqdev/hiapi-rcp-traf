@@ -1,5 +1,5 @@
 {
-    "name": "hiqdev/hiapi-rcptraf",
+    "name": "hiqdev/hiapi-rcp-traf",
     "type": "yii2-extension",
     "description": "hiAPI RCP Traf Collector",
     "keywords": [
@@ -9,13 +9,13 @@
         "consumption",
         "collector"
     ],
-    "homepage": "https://github.com/hiqdev/hiapi-rcptraf",
+    "homepage": "https://github.com/hiqdev/hiapi-rcp-traf",
     "license": "BSD-3-Clause",
     "support": {
         "email": "support@hiqdev.com",
-        "source": "https://github.com/hiqdev/hiapi-rcptraf",
-        "issues": "https://github.com/hiqdev/hiapi-rcptraf/issues",
-        "wiki": "https://github.com/hiqdev/hiapi-rcptraf/wiki",
+        "source": "https://github.com/hiqdev/hiapi-rcp-traf",
+        "issues": "https://github.com/hiqdev/hiapi-rcp-traf/issues",
+        "wiki": "https://github.com/hiqdev/hiapi-rcp-traf/wiki",
         "forum": "http://forum.hiqdev.com/"
     },
     "authors": [
