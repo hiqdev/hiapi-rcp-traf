@@ -3,3 +3,6 @@ package:
     name:           hiapi-rcp-traf-collector
     title:          hiAPI RCP Traf Collector
     keywords:       hiapi, rcp, traf, collector
+
+log:
+    level: info
