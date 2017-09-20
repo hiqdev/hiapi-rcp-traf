@@ -1,0 +1,5 @@
+package:
+    type:           yii2-extension
+    name:           hiapi-rcp-traf-collector
+    title:          hiAPI RCP Traf Collector
+    keywords:       hiapi, rcp, traf, collector
