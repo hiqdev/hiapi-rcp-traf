@@ -103,7 +103,6 @@ abstract class AbstractCollector
         }
         foreach ($this->getFiles() as $file) {
             $command = "ssh {$this->sshOptions} root@$ip '/bin/cat $dir/$file*' >> $dest";
-            print "$command\n";
             exec($command);
         }
 
