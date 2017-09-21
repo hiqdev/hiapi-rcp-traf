@@ -6,9 +6,11 @@ use DateTime;
 
 class FileParser
 {
-    const AGGREGATION_LAST = 'last';
-    const AGGREGATION_SUM  = 'sum';
-    const AGGREGATION_MAX  = 'max';
+    const AGGREGATION_MAX   = 'max';
+    const AGGREGATION_MIN   = 'min';
+    const AGGREGATION_SUM   = 'sum';
+    const AGGREGATION_LAST  = 'last';
+    const AGGREGATION_FIRST = 'first';
 
     protected $data = [];
 
@@ -54,6 +56,10 @@ class FileParser
                 return $prev + $curr;
             case self::AGGREGATION_MAX:
                 return $curr>$prev ? $curr : $prev;
+            case self::AGGREGATION_MIN:
+                return $curr<$prev ? $curr : $prev;
+            case self::AGGREGATION_FIRST:
+                return $prev === null ? $curr : $prev;
             default:
             case self::AGGREGATION_LAST:
                 return $curr;
