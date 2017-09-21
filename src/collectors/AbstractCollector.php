@@ -45,7 +45,7 @@ abstract class AbstractCollector
     {
         foreach ($objects as $row) {
             $group = $row['group'];
-            $res[$group]['elements'][$row['element']] = $row;
+            $res[$group]['objects'][$row['object']] = $row;
             if (empty($res[$group]['device_ip'])) {
                 $res[$group] = $row;
             }
@@ -58,14 +58,12 @@ abstract class AbstractCollector
 
     public function collect(array $group)
     {
-        $this->group = $group;
-        $elements = $group['elements'];
-        $files = $this->getFiles(reset($elements));
-        $dest = $this->copyData($files);
+        $path = $this->copyData($group['device_ip']);
         $data = new FileParser($this->keys, $this->fields, $this->aggregation);
-        $data->parse($dest);
-        foreach ($elements as $element => $row) {
-            $this->saveElement($row, $data->getValues($element));
+        $data->parse($path);
+        unlink($path);
+        foreach ($group['objects'] as $object => $row) {
+            $this->saveElement($row, $data->getValues($object));
         }
     }
 
@@ -74,65 +72,50 @@ abstract class AbstractCollector
         if (!$values) {
             return;
         }
-        if (empty($row['last_date'])) {
-            $last_date = new DateTime($row['last_date']);
-        } else {
-            $last_date = new DateTime('midnight first day of previous month');
-        }
         $curr_date = new DateTime();
-        if ($last_date->getTimestamp() > $curr_date->getTimestamp()) {
-            $last_date = $curr_date;
-        }
-        $last_date->sub(new DateInterval('P1D'));
+        $uses = [];
         foreach ($values as $date => $fields) {
             $z_date = new DateTime($date);
-            if (    $z_date->getTimestamp() < $last_date->getTimestamp()
-                ||  $z_date->getTimestamp() > $curr_date->getTimestamp())
-            {
-                fwrite(STDERR, "SKIPPPPPPED $row[element] $date $field $value $row[last_date]\n");
+            /// $z_date->getTimestamp() < $last_date->getTimestamp()
+            if ($z_date->getTimestamp() > $curr_date->getTimestamp()) {
                 continue;
             }
             foreach ($fields as $field => $value) {
-                print "$row[element] $date $field $value\n";
+                $uses[] = [
+                    'object_id' => $row['object_id'],
+                    'type'      => $field,
+                    'time'      => $date,
+                    'amount'    => $value,
+                ];
             }
+        }
+        if ($uses) {
+            $this->tool->base->usesSet($uses);
         }
     }
 
-    protected function copyData($files)
+    protected function copyData($ip)
     {
         $dir = $this->logsDir . '/' . strtoupper($this->type);
-        $dest = '/tmp/' . $this->type . '.' . getmypid();
-        file_put_contents($dest, '');
-        foreach ($files as $file) {
-            $ip = $this->group['device_ip'];
+        $dest = '/tmp/' . $this->type . '.' . getmypid() . '.' . $ip;
+        if (file_put_contents($dest, '') === FALSE) {
+            throw new \Exception("failed copy traf data to $dest");
+        }
+        foreach ($this->getFiles() as $file) {
             $command = "ssh {$this->sshOptions} root@$ip '/bin/cat $dir/$file*' >> $dest";
-            var_dump($command);
+            print "$command\n";
             exec($command);
         }
 
         return $dest;
     }
 
-    protected function getFiles(array $element)
+    protected function getFiles()
     {
-        $from = new DateTime($element['last_date']);
         $curr = new DateTime();
-        list($fy, $fm) = explode('-', $from->format('Y-m'));
-        list($cy, $cm) = explode('-', $curr->format('Y-m'));
-        $fn = $fy*12 + $fm - 1;
-        $cn = $cy*12 + $cm - 1;
+        $prev = new DateTime('midnight first day of previous month');
 
-        /// only previous month
-        if ($fn<$cn-1) {
-            $fn = $cn-1;
-        }
-
-        $files = [];
-        for ($i=$fn; $i<=$cn; $i++) {
-            $files[] = sprintf("%04d-%02d", floor($i/12), $i%12+1);
-        }
-
-        return $files;
+        return [$prev->format('Y-m'), $curr->format('Y-m')];
     }
 
 }
