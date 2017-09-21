@@ -74,7 +74,11 @@ abstract class AbstractCollector
         if (!$values) {
             return;
         }
-        $last_date = new DateTime($row['last_date']);
+        if (empty($row['last_date'])) {
+            $last_date = new DateTime($row['last_date']);
+        } else {
+            $last_date = new DateTime('midnight first day of previous month');
+        }
         $curr_date = new DateTime();
         if ($last_date->getTimestamp() > $curr_date->getTimestamp()) {
             $last_date = $curr_date;
@@ -117,6 +121,8 @@ abstract class AbstractCollector
         list($cy, $cm) = explode('-', $curr->format('Y-m'));
         $fn = $fy*12 + $fm - 1;
         $cn = $cy*12 + $cm - 1;
+
+        /// only previous month
         if ($fn<$cn-1) {
             $fn = $cn-1;
         }
