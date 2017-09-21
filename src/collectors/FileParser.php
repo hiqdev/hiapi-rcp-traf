@@ -1,8 +1,14 @@
 <?php
+/**
+ * hiAPI RCP Traf Collector
+ *
+ * @link      https://github.com/hiqdev/hiapi-rcp-traf
+ * @package   hiapi-rcp-traf
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2017, HiQDev (http://hiqdev.com/)
+ */
 
 namespace hiapi\rcptraf\collectors;
-
-use DateTime;
 
 class FileParser
 {
@@ -48,18 +54,18 @@ class FileParser
         $prev = isset($this->data[$key][$date][$field]) ? $this->data[$key][$date][$field] : null;
         $this->data[$key][$date][$field] = $this->aggregate($prev, $value);
     }
-    
+
     protected function aggregate($prev, $curr)
     {
         switch ($this->aggregation) {
             case self::AGGREGATION_SUM:
                 return $prev + $curr;
             case self::AGGREGATION_MAX:
-                return $curr>$prev ? $curr : $prev;
+                return $curr > $prev ? $curr : $prev;
             case self::AGGREGATION_MIN:
-                return $curr<$prev ? $curr : $prev;
+                return $curr < $prev ? $curr : $prev;
             case self::AGGREGATION_FIRST:
-                return $prev === null ? $curr : $prev;
+                return null === $prev ? $curr : $prev;
             default:
             case self::AGGREGATION_LAST:
                 return $curr;

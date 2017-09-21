@@ -1,9 +1,16 @@
 <?php
+/**
+ * hiAPI RCP Traf Collector
+ *
+ * @link      https://github.com/hiqdev/hiapi-rcp-traf
+ * @package   hiapi-rcp-traf
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2017, HiQDev (http://hiqdev.com/)
+ */
 
 namespace hiapi\rcptraf\collectors;
 
 use DateTime;
-use DateInterval;
 
 abstract class AbstractCollector
 {
@@ -98,7 +105,7 @@ abstract class AbstractCollector
     {
         $dir = $this->logsDir . '/' . strtoupper($this->type);
         $dest = '/tmp/' . $this->type . '.' . getmypid() . '.' . $ip;
-        if (file_put_contents($dest, '') === FALSE) {
+        if (false === file_put_contents($dest, '')) {
             throw new \Exception("failed copy traf data to $dest");
         }
         foreach ($this->getFiles() as $file) {
@@ -116,5 +123,4 @@ abstract class AbstractCollector
 
         return [$prev->format('Y-m'), $curr->format('Y-m')];
     }
-
 }

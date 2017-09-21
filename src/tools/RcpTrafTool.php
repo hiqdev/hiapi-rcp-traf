@@ -1,8 +1,14 @@
 <?php
+/**
+ * hiAPI RCP Traf Collector
+ *
+ * @link      https://github.com/hiqdev/hiapi-rcp-traf
+ * @package   hiapi-rcp-traf
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2017, HiQDev (http://hiqdev.com/)
+ */
 
 namespace hiapi\rcptraf\tools;
-
-use apiTool;
 
 /**
  * RCP traffic collector tool.
