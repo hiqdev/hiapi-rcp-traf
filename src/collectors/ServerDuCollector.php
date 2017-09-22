@@ -16,7 +16,7 @@ class ServerDuCollector extends AbstractCollector
 
     public $fields = ['server_du', 'server_files', 'server_ssd', 'server_sata'];
 
-    public $aggregation = FileParser::AGGREGATION_MAX;
+    public $aggregation = FileParser::AGGREGATION_LAST;
 
     public function findObjects()
     {
