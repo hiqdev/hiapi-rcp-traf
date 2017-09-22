@@ -40,6 +40,9 @@ abstract class AbstractCollector
     public function collectAll()
     {
         $groups = $this->groupObjects($this->findObjects());
+        if (empty($groups)) {
+            return true;
+        }
         foreach ($groups as $group) {
             $this->collect($group);
         }
