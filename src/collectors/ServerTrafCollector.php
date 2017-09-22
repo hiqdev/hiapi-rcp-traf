@@ -33,7 +33,7 @@ class ServerTrafCollector extends AbstractCollector
             FROM        device          s
             JOIN        device2switchz  l ON l.device_id=s.obj_id
             JOIN        sws             w ON w.obj_id=l.switch_id
-            JOIN        device          t ON t.obj_id=w.traf_server_id AND t.state_id!=state_id('device,deleted')
+            JOIN        device          t ON t.obj_id=w.traf_server_id AND t.state_id!=zstate_id('device,deleted')
             ORDER BY    \"group\"
         ");
     }
