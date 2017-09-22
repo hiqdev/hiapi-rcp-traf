@@ -81,7 +81,17 @@ abstract class AbstractCollector
         $curr_date = new DateTime();
         $uses = [];
         foreach ($values as $date => $fields) {
-            $z_date = new DateTime($date);
+            if (!preg_match('/[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}/', $date, $matches)) {
+                continue;
+            }
+
+            $date = $matches[0];
+            try {
+                $z_date = new DateTime($date);
+            } catch (\Exception $e) {
+                continue;
+            }
+
             /// $z_date->getTimestamp() < $last_date->getTimestamp()
             if ($z_date->getTimestamp() > $curr_date->getTimestamp()) {
                 continue;

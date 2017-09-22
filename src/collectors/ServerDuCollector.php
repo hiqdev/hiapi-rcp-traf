@@ -40,14 +40,13 @@ class ServerDuCollector extends AbstractCollector
                         AND     so.name IN ('rcp_server_du_counter')
                 )
                 SELECT      s.obj_id AS object_id,
-                            coalesce(host(w.ip),w.name)||' '||full_port(b.value,l.port,s.dc) AS object,
+                            coalesce(host(w.ip),w.name)||' '||coalesce(l.zport,'') AS object,
                             t.ip AS group, w.obj_id AS switch_id,
                             t.obj_id AS device_id, t.ip AS device_ip
                 FROM        device          s
                 JOIN        device2switchz  l ON l.device_id=s.obj_id
                 JOIN        sws             w ON w.obj_id=l.switch_id
                 JOIN        statserver      t ON t.obj_id=w.traf_server_id
-                LEFT JOIN   value           b ON b.obj_id=l.switch_id AND b.prop_id=prop_id('device,switch:base_port_no')
                 ORDER BY    \"group\"
             ",
         ]);
