@@ -18,6 +18,8 @@ class AccountDuCollector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_LAST;
 
+    public $sshOptions = '-o ConnectTimeout=29 -o BatchMode=yes -o StrictHostKeyChecking=no -o VisualHostKey=no -P222';
+
     public function findObjects()
     {
         return $this->tool->base->smartSearch($this->params, [
