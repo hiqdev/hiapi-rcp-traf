@@ -23,6 +23,9 @@ return [
             'rcptraf-tool:server_du' => [
                 'class' => \hiapi\rcptraf\collectors\ServerDuCollector::class,
             ],
+            'rcptraf-tool:account_du' => [
+                'class' => \hiapi\rcptraf\collectors\AccountDuCollector::class,
+            ],
         ],
     ],
 ];
