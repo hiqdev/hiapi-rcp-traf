@@ -34,7 +34,7 @@ class ServerDuCollector extends AbstractCollector
                     JOIN        soft    so  ON so.obj_id = i.soft_id
                     WHERE       st.state_id != zstate_id('device,deleted')
                         AND     so.name IN ('rcp_server_du_counter')
-            ),
+            )
             SELECT      t.ip AS group, w.obj_id AS switch_id, s.obj_id AS object_id,
                         coalesce(host(w.ip),w.name)||' '||full_port(b.value,l.port,s.dc) AS object,
                         t.obj_id AS device_id, t.ip AS device_ip
