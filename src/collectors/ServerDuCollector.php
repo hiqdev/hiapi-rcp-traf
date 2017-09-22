@@ -31,13 +31,13 @@ class ServerDuCollector extends AbstractCollector
                     JOIN        value   v ON v.obj_id=w.obj_id AND v.prop_id=prop_id('device,switch:traf_server_id')
                     WHERE       w.type_id=switch_type_id('net')
                 ),
-                    statserver AS (
-                        SELECT      st.*
-                        FROM        device  st
-                        JOIN        install i   ON i.object_id = st.obj_id
-                        JOIN        soft    so  ON so.obj_id = i.soft_id
-                        WHERE       st.state_id != zstate_id('device,deleted')
-                            AND     so.name IN ('rcp_server_du_counter')
+                statserver AS (
+                    SELECT      st.*
+                    FROM        device  st
+                    JOIN        install i   ON i.object_id = st.obj_id
+                    JOIN        soft    so  ON so.obj_id = i.soft_id
+                    WHERE       st.state_id != zstate_id('device,deleted')
+                        AND     so.name IN ('rcp_server_du_counter')
                 )
                 SELECT      s.obj_id AS object_id,
                             coalesce(host(w.ip),w.name)||' '||full_port(b.value,l.port,s.dc) AS object,
