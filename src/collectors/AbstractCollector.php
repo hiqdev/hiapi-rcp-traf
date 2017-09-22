@@ -16,11 +16,9 @@ abstract class AbstractCollector
 {
     protected $tool;
 
-    public $base;
+    protected $type;
 
-    public $dbc;
-
-    public $type;
+    protected $params;
 
     public $keys = ['name'];
 
@@ -32,15 +30,16 @@ abstract class AbstractCollector
 
     public $sshOptions = '-o ConnectTimeout=29 -o BatchMode=yes -o StrictHostKeyChecking=no -o VisualHostKey=no';
 
-    public function __construct($tool, $type)
+    public function __construct($tool, $type, $params)
     {
         $this->tool = $tool;
         $this->type = $type;
+        $this->params = $params;
     }
 
-    public function collectAll($params)
+    public function collectAll()
     {
-        $groups = $this->groupObjects($this->findObjects($params));
+        $groups = $this->groupObjects($this->findObjects());
         foreach ($groups as $group) {
             $this->collect($group);
         }
@@ -52,10 +51,10 @@ abstract class AbstractCollector
     {
         foreach ($objects as $row) {
             $group = $row['group'];
-            $res[$group]['objects'][$row['object']] = $row;
             if (empty($res[$group]['device_ip'])) {
                 $res[$group] = $row;
             }
+            $res[$group]['objects'][$row['object']] = $row;
         }
 
         return $res;

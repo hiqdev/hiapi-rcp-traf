@@ -17,12 +17,12 @@ namespace hiapi\rcptraf\tools;
  */
 class RcpTrafTool extends \hiapi\components\AbstractTool
 {
-    public function usesCollect($jrow)
+    public function usesCollect($params)
     {
         $res = [];
-        foreach ($jrow['types'] as $type) {
-            $collector = $this->di->get("rcptraf-tool:$type", [$this, $type]);
-            $res[$type] = $collector->collectAll($jrow);
+        foreach ($params['types'] as $type) {
+            $collector = $this->di->get("rcptraf-tool:$type", [$this, $type, $params]);
+            $res[$type] = $collector->collectAll();
         }
 
         return $res;
