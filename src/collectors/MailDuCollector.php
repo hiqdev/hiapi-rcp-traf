@@ -18,8 +18,6 @@ class MailDuCollector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_SUM;
 
-    public $sshPort = 222;
-
     public function findObjects()
     {
         return $this->tool->base->smartSearch($this->params, [
