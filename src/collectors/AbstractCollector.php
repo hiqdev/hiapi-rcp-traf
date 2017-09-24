@@ -127,11 +127,21 @@ abstract class AbstractCollector
         }
 
         if (!$socket = @fsockopen($ip, $this->sshPort, $errno, $errstr, 3)) {
-            return false;
-        } else {
-            fclose($socket);
+            switch ($this->sshPort) {
+                case 22:
+                    $port = 222;
+                    break;
+                case 222:
+                    $port = 22;
+            }
+            if (!$socket = @fsockopen($ip, $port, $errno, $errstr, 3)) {
+                return false;
+            } else {
+                $this->sshPort = $port;
+            }
         }
 
+        fclose($socket);
         $files = implode(" ", $this->getFiles());
         $command = "ssh {$this->sshOptions} -p{$this->sshPort} root@$ip '/bin/cat $files' > $dest 2>/dev/null";
         exec($command, $output, $result);
