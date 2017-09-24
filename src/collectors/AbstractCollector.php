@@ -68,6 +68,10 @@ abstract class AbstractCollector
     public function collect(array $group)
     {
         $path = $this->copyData($group['device_ip']);
+        if ($path === false) {
+            return;
+        }
+
         $data = new FileParser($this->keys, $this->fields, $this->aggregation);
         $data->parse($path);
         unlink($path);
@@ -115,24 +119,39 @@ abstract class AbstractCollector
 
     protected function copyData($ip)
     {
-        $dir = $this->logsDir . '/' . strtoupper($this->type);
         $dest = '/tmp/' . $this->type . '.' . getmypid() . '.' . $ip;
         if (false === file_put_contents($dest, '')) {
             throw new \Exception("failed copy traf data to $dest");
         }
-        foreach ($this->getFiles() as $file) {
-            $command = "ssh {$this->sshOptions} root@$ip '/bin/cat $dir/$file*' >> $dest";
-            exec($command);
+
+        foreach ([222, 22] as $port) {
+            if ($socket = @fsockopen($ip, $port, $errno, $errstr, 3)) {
+                break;
+            }
         }
+
+        if (!$socket) {
+            return false;
+        }
+
+        fclose($socket);
+        $files = implode(" ", $this->getFiles());
+        $command = "ssh {$this->sshOptions} -p{$port} root@$ip '/bin/cat $files' > $dest 2>/dev/null";
+        exec($command, $output, $result);
 
         return $dest;
     }
 
     protected function getFiles()
     {
+        static $dir;
+        if ($dir === null) {
+            $dir = $this->logsDir . '/' . strtoupper($this->type);
+        }
+
         $curr = new DateTime();
         $prev = new DateTime('midnight first day of previous month');
 
-        return [$prev->format('Y-m'), $curr->format('Y-m')];
+        return [$dir ."/" . $prev->format('Y-m') . "*", $dir . "/" . $curr->format('Y-m') . "*"];
     }
 }
