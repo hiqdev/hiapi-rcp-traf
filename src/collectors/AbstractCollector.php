@@ -28,6 +28,8 @@ abstract class AbstractCollector
 
     public $logsDir = '/home/LOGS';
 
+    public $sshPorts = [222, 22];
+
     public $sshOptions = '-o ConnectTimeout=29 -o BatchMode=yes -o StrictHostKeyChecking=no -o VisualHostKey=no';
 
     public function __construct($tool, $type, $params)
@@ -124,22 +126,29 @@ abstract class AbstractCollector
             throw new \Exception("failed copy traf data to $dest");
         }
 
-        foreach ([222, 22] as $port) {
-            if ($socket = @fsockopen($ip, $port, $errno, $errstr, 3)) {
-                break;
-            }
-        }
-
-        if (!$socket) {
+        $port = $this->detectSshPort($ip);
+        if (!$port) {
             return false;
         }
 
-        fclose($socket);
         $files = implode(" ", $this->getFiles());
         $command = "ssh {$this->sshOptions} -p{$port} root@$ip '/bin/cat $files' > $dest 2>/dev/null";
         exec($command, $output, $result);
 
         return $dest;
+    }
+
+    protected function detectSshPort($ip)
+    {
+        foreach ($this->sshPorts as $port) {
+            if ($socket = @fsockopen($ip, $port, $errno, $errstr, 3)) {
+                fclose($socket);
+
+                return $port;
+            }
+        }
+
+        return false;
     }
 
     protected function getFiles()
