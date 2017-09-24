@@ -20,6 +20,9 @@ return [
             'rcptraf-tool:domain_traf' => [
                 'class' => \hiapi\rcptraf\collectors\DomainTrafCollector::class,
             ],
+            'rcptraf-tool:ip_traf' => [
+                'class' => \hiapi\rcptraf\collectors\IpTrafCollector::class,
+            ],
             'rcptraf-tool:mail_du' => [
                 'class' => \hiapi\rcptraf\collectors\MailDuCollector::class,
             ],
