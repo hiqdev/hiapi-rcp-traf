@@ -30,6 +30,8 @@ abstract class AbstractCollector
 
     public $sshOptions = '-o ConnectTimeout=29 -o BatchMode=yes -o StrictHostKeyChecking=no -o VisualHostKey=no';
 
+    public $sshPort = 22;
+
     public function __construct($tool, $type, $params)
     {
         $this->tool = $tool;
@@ -68,6 +70,10 @@ abstract class AbstractCollector
     public function collect(array $group)
     {
         $path = $this->copyData($group['device_ip']);
+        if ($path === false) {
+            return;
+        }
+
         $data = new FileParser($this->keys, $this->fields, $this->aggregation);
         $data->parse($path);
         unlink($path);
@@ -120,10 +126,20 @@ abstract class AbstractCollector
         if (false === file_put_contents($dest, '')) {
             throw new \Exception("failed copy traf data to $dest");
         }
-        foreach ($this->getFiles() as $file) {
-            $command = "ssh {$this->sshOptions} root@$ip '/bin/cat $dir/$file*' >> $dest";
-            exec($command);
+
+        if (!$socket = @fsockopen($ip, $this->sshPort, $errno, $errstr, 3)) {
+            return false;
+        } else {
+            fclose($socket);
         }
+
+        foreach ($this->getFiles() as $file) {
+            $fileList[] = "$dir/$file*";
+        }
+
+        $files = implode(" ", $fileList);
+        $command = "ssh {$this->sshOptions} -p{$this->sshPort} root@$ip '/bin/cat $files' > $dest 2>/dev/null";
+        exec($command, $output, $result);
 
         return $dest;
     }
