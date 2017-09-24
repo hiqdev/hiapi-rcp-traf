@@ -30,8 +30,6 @@ abstract class AbstractCollector
 
     public $sshOptions = '-o ConnectTimeout=29 -o BatchMode=yes -o StrictHostKeyChecking=no -o VisualHostKey=no';
 
-    public $sshPort = 22;
-
     public function __construct($tool, $type, $params)
     {
         $this->tool = $tool;
@@ -126,24 +124,19 @@ abstract class AbstractCollector
             throw new \Exception("failed copy traf data to $dest");
         }
 
-        if (!$socket = @fsockopen($ip, $this->sshPort, $errno, $errstr, 3)) {
-            switch ($this->sshPort) {
-                case 22:
-                    $port = 222;
-                    break;
-                case 222:
-                    $port = 22;
+        foreach ([222, 22] as $port) {
+            if ($socket = @fsockopen($ip, $port, $errno, $errstr, 3)) {
+                break;
             }
-            if (!$socket = @fsockopen($ip, $port, $errno, $errstr, 3)) {
-                return false;
-            } else {
-                $this->sshPort = $port;
-            }
+        }
+
+        if (!$socket) {
+            return false;
         }
 
         fclose($socket);
         $files = implode(" ", $this->getFiles());
-        $command = "ssh {$this->sshOptions} -p{$this->sshPort} root@$ip '/bin/cat $files' > $dest 2>/dev/null";
+        $command = "ssh {$this->sshOptions} -p{$port} root@$ip '/bin/cat $files' > $dest 2>/dev/null";
         exec($command, $output, $result);
 
         return $dest;
