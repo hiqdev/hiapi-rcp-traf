@@ -121,7 +121,6 @@ abstract class AbstractCollector
 
     protected function copyData($ip)
     {
-        $dir = $this->logsDir . '/' . strtoupper($this->type);
         $dest = '/tmp/' . $this->type . '.' . getmypid() . '.' . $ip;
         if (false === file_put_contents($dest, '')) {
             throw new \Exception("failed copy traf data to $dest");
@@ -133,11 +132,7 @@ abstract class AbstractCollector
             fclose($socket);
         }
 
-        foreach ($this->getFiles() as $file) {
-            $fileList[] = "$dir/$file*";
-        }
-
-        $files = implode(" ", $fileList);
+        $files = implode(" ", $this->getFiles());
         $command = "ssh {$this->sshOptions} -p{$this->sshPort} root@$ip '/bin/cat $files' > $dest 2>/dev/null";
         exec($command, $output, $result);
 
@@ -146,9 +141,14 @@ abstract class AbstractCollector
 
     protected function getFiles()
     {
+        static $dir;
+        if ($dir === null) {
+            $dir = $this->logsDir . '/' . strtoupper($this->type);
+        }
+
         $curr = new DateTime();
         $prev = new DateTime('midnight first day of previous month');
 
-        return [$prev->format('Y-m'), $curr->format('Y-m')];
+        return [$dir ."/" . $prev->format('Y-m') . "*", $dir . "/" . $curr->format('Y-m') . "*"];
     }
 }
