@@ -80,7 +80,7 @@ abstract class AbstractCollector
 
     protected function createConfig($rows = false)
     {
-        if ($rows === false) {
+        if ($rows === false || $this->configFormat === "") {
             return false;
         }
 
