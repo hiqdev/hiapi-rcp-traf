@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2017, HiQDev (http://hiqdev.com/)
  */
 
-namespace hiapi\rcptraf\collectors;
+namespace hiapi\rcptraf\utils;
 
 class FileParser
 {
