@@ -12,7 +12,7 @@ return [
     'container' => [
         'definitions' => [
             'rcptraf-tool' => [
-                'class' => \hiapi\rcptraf\tools\RcpTrafTool::class,
+                'class' => \hiapi\rcptraf\RcpTrafTool::class,
             ],
             'rcptraf-tool:account_du' => [
                 'class' => \hiapi\rcptraf\collectors\AccountDuCollector::class,

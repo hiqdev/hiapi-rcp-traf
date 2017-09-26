@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2017, HiQDev (http://hiqdev.com/)
  */
 
-namespace hiapi\rcptraf\tools;
+namespace hiapi\rcptraf;
 
 /**
  * RCP traffic collector tool.
