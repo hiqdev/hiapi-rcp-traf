@@ -73,7 +73,7 @@ abstract class AbstractCollector
 
     abstract public function findObjects();
 
-    public function findConfigs($group)
+    protected function findConfigs($group)
     {
         return null;
     }
@@ -160,31 +160,33 @@ abstract class AbstractCollector
 
     protected function copyFile($src, $dest, $port)
     {
+        // FOR PRODUCTION USE UNCOMENT NEXT LINE
 //        exec("/usr/bin/scp {$this->sshOptions} -P{$port} $src $dest", $output, $res);
         return $res == 0;
     }
 
-    public function saveConfig($group, $port = 222)
+    protected function saveConfig($group, $port = 222)
     {
         if ($this->configPath === null || $this->configName === null) {
             return $this;
         }
+
         $config = $this->createConfig($this->findConfigs($group));
-        if ($config !== false) {
-            $src = $this->getTmpFileName($group['device_ip'], $this->configName);
-            if (false === file_put_contents($src, $config)) {
-                throw new \Exception("failed copy traf config to $src");
-            }
-
-            $dst = "root@{$group['device_ip']}:{$this->configPath}/{$this->configName}";
-            if ($this->copyFile($src, $dst, $port)=== false){
-                throw new \Exception("failed copy traf config to $dst");
-            }
-
-            unlink($src);
+        if ($config === false) {
             return $this;
         }
 
+        $src = $this->getTmpFileName($group['device_ip'], $this->configName);
+        if (false === file_put_contents($src, $config)) {
+            throw new \Exception("failed copy traf config to $src");
+        }
+
+        $dst = "root@{$group['device_ip']}:{$this->configPath}/{$this->configName}";
+        if ($this->copyFile($src, $dst, $port)=== false){
+            throw new \Exception("failed copy traf config to $dst");
+        }
+
+        unlink($src);
         return $this;
     }
 

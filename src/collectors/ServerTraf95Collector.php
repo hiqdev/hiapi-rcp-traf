@@ -57,7 +57,7 @@ class ServerTraf95Collector extends AbstractCollector
         ]);
     }
 
-    public function findConfigs($group)
+    protected function findConfigs($group)
     {
         return $this->tool->base->smartSearch($group, [
             'dbcop' => 'rows',
