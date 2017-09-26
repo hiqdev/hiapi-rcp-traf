@@ -22,7 +22,7 @@ class ServerDuCollector extends AbstractCollector
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => array('cond'=>'in', 'check'=>'ids', 'sql'=>'s.obj_id'),
+                'object_ids' => [ 'cond'=>'in', 'check'=>'ids', 'sql'=>'s.obj_id' ],
             ],
             'query' => "
                 WITH sws AS (
