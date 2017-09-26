@@ -10,6 +10,8 @@
 
 namespace hiapi\rcptraf\collectors;
 
+use hiapi\rcptraf\utils\FileParser;
+
 class ServerTrafCollector extends AbstractCollector
 {
     public $keys = ['switch_ip', 'port'];
@@ -18,9 +20,7 @@ class ServerTrafCollector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_SUM;
 
-    public $configName = "switch_list";
-
-    public $configFormat = "%-15s %-2s %-20s %s";
+    public $configPath = "/usr/local/rcp/etc/NEW.switch_list.NEW";
 
     public function findObjects()
     {
@@ -49,29 +49,26 @@ class ServerTrafCollector extends AbstractCollector
         ]);
     }
 
-    protected function findConfigs($group)
+    public function buildConfig($ip)
     {
-        return $this->tool->base->smartSearch($group, [
-            'dbcop' => 'rows',
-            'filters' => [
-                'device_id' => ['cond' => 'eq', 'check' => 'id', 'sql' => 'str2int(ts.value)' ],
-            ],
-            'query' => "
-                SELECT      sw.ip,st.name AS version,coalesce(cv.value,'AHswitch1Mon249') AS password,bt.name AS bits
-                FROM        switch  sw
-                JOIN        value   ts ON ts.obj_id=sw.obj_id AND ts.prop_id=prop_id('device,switch:traf_server_id')
-                LEFT JOIN   value   cv ON cv.obj_id=sw.obj_id AND cv.prop_id=prop_id('device,switch:community')
-                LEFT JOIN   value   sv ON sv.obj_id=sw.obj_id AND sv.prop_id=prop_id('device,switch:snmp_version_id')
-                LEFT JOIN   prop    sp ON sp.obj_id=prop_id('device,switch:snmp_version_id')
-                LEFT JOIN   type    st ON st.obj_id=coalesce(sv.value,sp.def)::integer
-                LEFT JOIN   value   bv ON bv.obj_id=sw.obj_id AND bv.prop_id=prop_id('device,switch:digit_capacity_id')
-                LEFT JOIN   prop    bp ON bp.obj_id=prop_id('device,switch:digit_capacity_id')
-                LEFT JOIN   type    bt ON bt.obj_id=coalesce(bv.value,bp.def)::integer
-                WHERE       sw.type_id=switch_type_id('net') AND sw.ip IS NOT NULL
-                    AND     sw.state_id!=zstate_id('device,deleted')
-                    \$filter_cond
-                ORDER BY    bt.name,sw.ip
-            ",
-        ]);
+        $ip = $this->tool->dbc->quote($ip);
+        $rows = $this->tool->dbc->rows("
+            SELECT      sw.ip,st.name AS version,coalesce(cv.value,'AHswitch1Mon249') AS password,bt.name AS bits
+            FROM        switch      sw
+            JOIN        value       tv ON tv.obj_id = sw.obj_id AND tv.prop_id=prop_id('device,switch:traf_server_id')
+            LEFT JOIN   value       cv ON cv.obj_id = sw.obj_id AND cv.prop_id=prop_id('device,switch:community')
+            LEFT JOIN   prop        sp ON sp.obj_id = prop_id('device,switch:snmp_version_id')
+            LEFT JOIN   value       sv ON sv.obj_id = sw.obj_id AND sv.prop_id=sp.obj_id
+            LEFT JOIN   type        st ON st.obj_id::text = coalesce(sv.value,sp.def)
+            LEFT JOIN   prop        bp ON bp.obj_id = prop_id('device,switch:digit_capacity_id')
+            LEFT JOIN   value       bv ON bv.obj_id = sw.obj_id AND bv.prop_id=bp.obj_id
+            LEFT JOIN   type        bt ON bt.obj_id::text = coalesce(bv.value,bp.def)
+            WHERE       sw.type_id=switch_type_id('net') AND sw.ip IS NOT NULL
+                AND     sw.state_id!=zstate_id('device,deleted')
+                AND     tv.value=device_id(str2inet($ip))::text
+            ORDER BY    bt.name,sw.ip
+        ");
+
+        return $this->renderConfig($rows, "%-15s %-2s %-20s %s");
     }
 }

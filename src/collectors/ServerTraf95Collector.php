@@ -10,6 +10,8 @@
 
 namespace hiapi\rcptraf\collectors;
 
+use hiapi\rcptraf\utils\FileParser;
+
 class ServerTraf95Collector extends AbstractCollector
 {
     public $keys = ['switch_ip', 'port'];
@@ -18,9 +20,7 @@ class ServerTraf95Collector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_LAST;
 
-    public $configName = "agg95.list";
-
-    public $configFormat = "127.127.127.127 %-15s   %s";
+    public $configPath = "/usr/local/rcp/etc/NEW.agg95.list.NEW";
 
     public function findObjects()
     {
@@ -57,22 +57,21 @@ class ServerTraf95Collector extends AbstractCollector
         ]);
     }
 
-    protected function findConfigs($group)
+    public function buildConfig($ip)
     {
-        return $this->tool->base->smartSearch($group, [
-            'dbcop' => 'rows',
-            'query' => "
-                SELECT      t.obj_id AS id,join((host(w.ip)||':'||x.zport,' ')) AS ps
-                FROM        tariff          t
-                JOIN        sale            s ON s.tariff_id=t.obj_id
-                JOIN        device          v ON v.obj_id=s.object_id
-                JOIN        device2switchz  x ON x.device_id=s.object_id
-                JOIN        switch          w ON w.obj_id=x.switch_id AND w.type_id=switch_type_id('net')
-                JOIN        value           c ON c.obj_id=t.obj_id AND c.prop_id=prop_id('tariff:count_resources')
-                WHERE       t.type_id=ztype_id('tariff,server') AND t.is_grouping
-                GROUP BY    t.obj_id
-                HAVING      count( *)>1
-            ",
-        ]);
+        $rows = $this->tool->dbc->rows("
+            SELECT      t.obj_id AS id,join((host(w.ip)||':'||x.zport,' ')) AS ps
+            FROM        tariff          t
+            JOIN        sale            s ON s.tariff_id=t.obj_id
+            JOIN        device          v ON v.obj_id=s.object_id
+            JOIN        device2switchz  x ON x.device_id=s.object_id
+            JOIN        switch          w ON w.obj_id=x.switch_id AND w.type_id=switch_type_id('net')
+            JOIN        value           c ON c.obj_id=t.obj_id AND c.prop_id=prop_id('tariff:count_resources')
+            WHERE       t.type_id=ztype_id('tariff,server') AND t.is_grouping
+            GROUP BY    t.obj_id
+            HAVING      count( *)>1
+        ");
+
+        return $this->renderConfig($rows, "127.127.127.127 %-15s   %s");
     }
 }
