@@ -10,6 +10,8 @@
 
 namespace hiapi\rcptraf\collectors;
 
+use hiapi\rcptraf\utils\FileParser;
+
 class IpTrafCollector extends AbstractCollector
 {
     public $keys = ['ip'];

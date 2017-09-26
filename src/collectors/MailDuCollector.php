@@ -10,6 +10,8 @@
 
 namespace hiapi\rcptraf\collectors;
 
+use hiapi\rcptraf\utils\FileParser;
+
 class MailDuCollector extends AbstractCollector
 {
     public $keys = ['obj_id'];

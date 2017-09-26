@@ -10,6 +10,8 @@
 
 namespace hiapi\rcptraf\collectors;
 
+use hiapi\rcptraf\utils\FileParser;
+
 class ServerDuCollector extends AbstractCollector
 {
     public $keys = ['switch_ip', 'port'];
