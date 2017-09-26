@@ -18,11 +18,15 @@ class ServerTraf95Collector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_LAST;
 
+    public $configName = "agg95.list";
+
+    public $configFormat = "127.127.127.127 %-15s   %s";
+
     public function findObjects()
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => array('cond'=>'in', 'check'=>'ids', 'sql'=>'s.obj_id'),
+                'object_ids' => [ 'cond'=>'in', 'check'=>'ids', 'sql'=>'s.obj_id' ],
             ],
             'query' => "
                 WITH obs AS (
@@ -49,6 +53,25 @@ class ServerTraf95Collector extends AbstractCollector
                 JOIN        device      t ON t.obj_id=w.traf_server_id AND t.state_id!=zstate_id('device,deleted')
                 WHERE       TRUE \$filter_cond
                 ORDER BY    \"group\"
+            ",
+        ]);
+    }
+
+    protected function findConfigs($group)
+    {
+        return $this->tool->base->smartSearch($group, [
+            'dbcop' => 'rows',
+            'query' => "
+                SELECT      t.obj_id AS id,join((host(w.ip)||':'||x.zport,' ')) AS ps
+                FROM        tariff          t
+                JOIN        sale            s ON s.tariff_id=t.obj_id
+                JOIN        device          v ON v.obj_id=s.object_id
+                JOIN        device2switchz  x ON x.device_id=s.object_id
+                JOIN        switch          w ON w.obj_id=x.switch_id AND w.type_id=switch_type_id('net')
+                JOIN        value           c ON c.obj_id=t.obj_id AND c.prop_id=prop_id('tariff:count_resources')
+                WHERE       t.type_id=ztype_id('tariff,server') AND t.is_grouping
+                GROUP BY    t.obj_id
+                HAVING      count( *)>1
             ",
         ]);
     }

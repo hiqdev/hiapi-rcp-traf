@@ -22,7 +22,7 @@ class IpTrafCollector extends AbstractCollector
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => array('cond'=>'in', 'check'=>'ids', 'sql'=>'i.obj_id'),
+                'object_ids' => [ 'cond'=>'in', 'check'=>'ids', 'sql'=>'i.obj_id' ],
             ],
             'query' => "
                 SELECT      i.obj_id AS object_id, i.ip AS object,

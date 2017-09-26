@@ -22,7 +22,7 @@ class MailDuCollector extends AbstractCollector
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => array('cond'=>'in', 'check'=>'ids', 'sql'=>'m.obj_id'),
+                'object_ids' => [ 'cond'=>'in', 'check'=>'ids', 'sql'=>'m.obj_id' ],
             ],
             'query' => "
                 SELECT      m.obj_id AS object_id, m.obj_id AS object,

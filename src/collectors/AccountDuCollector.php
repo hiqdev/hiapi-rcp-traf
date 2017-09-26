@@ -22,7 +22,7 @@ class AccountDuCollector extends AbstractCollector
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => array('cond'=>'in', 'check'=>'ids', 'sql'=>'a.obj_id'),
+                'object_ids' => [ 'cond'=>'in', 'check'=>'ids', 'sql'=>'a.obj_id' ],
             ],
             'query' => "
                 SELECT      a.obj_id AS object_id,

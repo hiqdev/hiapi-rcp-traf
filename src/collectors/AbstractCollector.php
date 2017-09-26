@@ -32,6 +32,12 @@ abstract class AbstractCollector
 
     public $sshOptions = '-o ConnectTimeout=29 -o BatchMode=yes -o StrictHostKeyChecking=no -o VisualHostKey=no';
 
+    public $configPath = "/usr/local/rcp/etc";
+
+    public $configName = null;
+
+    public $configFormat = "";
+
     public function __construct($tool, $type, $params)
     {
         $this->tool = $tool;
@@ -67,9 +73,32 @@ abstract class AbstractCollector
 
     abstract public function findObjects();
 
+    protected function findConfigs($group)
+    {
+        return null;
+    }
+
+    protected function createConfig($rows = false)
+    {
+        if ($rows === false || $this->configFormat === "") {
+            return false;
+        }
+
+        foreach ($rows as $row) {
+            $config[] = vsprintf($this->configFormat, $row);
+        }
+
+        return implode("\n", $config);
+    }
+
     public function collect(array $group)
     {
-        $path = $this->copyData($group['device_ip']);
+        $port = $this->detectSshPort($group['device_ip']);
+        if (!$port) {
+            return ;
+        }
+
+        $path = $this->saveConfig($group, $port)->copyData($group, $port);
         if ($path === false) {
             return;
         }
@@ -119,18 +148,52 @@ abstract class AbstractCollector
         }
     }
 
-    protected function copyData($ip)
+    protected function getTmpFileName($ip, $add = '')
     {
-        $dest = '/tmp/' . $this->type . '.' . getmypid() . '.' . $ip;
+        $dest = '/tmp/' . $this->type . '.' . getmypid() . '.' . $ip . ($add ? ".{$add}" : '');
         if (false === file_put_contents($dest, '')) {
             throw new \Exception("failed copy traf data to $dest");
         }
 
-        $port = $this->detectSshPort($ip);
-        if (!$port) {
-            return false;
+        return $dest;
+    }
+
+    protected function copyFile($src, $dest, $port)
+    {
+        // FOR PRODUCTION USE UNCOMENT NEXT LINE
+//        exec("/usr/bin/scp {$this->sshOptions} -P{$port} $src $dest", $output, $res);
+        return $res == 0;
+    }
+
+    protected function saveConfig($group, $port = 222)
+    {
+        if ($this->configPath === null || $this->configName === null) {
+            return $this;
         }
 
+        $config = $this->createConfig($this->findConfigs($group));
+        if ($config === false) {
+            return $this;
+        }
+
+        $src = $this->getTmpFileName($group['device_ip'], $this->configName);
+        if (false === file_put_contents($src, $config)) {
+            throw new \Exception("failed copy traf config to $src");
+        }
+
+        $dst = "root@{$group['device_ip']}:{$this->configPath}/{$this->configName}";
+        if ($this->copyFile($src, $dst, $port)=== false){
+            throw new \Exception("failed copy traf config to $dst");
+        }
+
+        unlink($src);
+        return $this;
+    }
+
+    protected function copyData($group, $port = 222)
+    {
+        $ip = $group['device_ip'];
+        $dest = $this->getTmpFileName($ip);
         $files = implode(" ", $this->getFiles());
         $command = "ssh {$this->sshOptions} -p{$port} root@$ip '/bin/cat $files' > $dest 2>/dev/null";
         exec($command, $output, $result);
