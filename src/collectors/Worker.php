@@ -10,7 +10,6 @@
 
 namespace hiapi\rcptraf\collectors;
 
-use DateTime;
 use hiapi\rcptraf\utils\FileParser;
 use hiapi\rcptraf\utils\Ssh;
 
@@ -64,7 +63,8 @@ class Worker
         if (!$values) {
             return;
         }
-        $curr_date = new DateTime();
+        $min = $this->collector->getMinTime()->getTimestamp();
+        $max = strtotime('now');
         $uses = [];
         foreach ($values as $date => $fields) {
             if (!preg_match('/[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}/', $date, $matches)) {
@@ -72,16 +72,11 @@ class Worker
             }
 
             $date = $matches[0];
-            try {
-                $z_date = new DateTime($date);
-            } catch (\Exception $e) {
+            $cur = strtotime($date);
+            if ($cur > $max || $cur < $min) {
                 continue;
             }
 
-            /// $z_date->getTimestamp() < $last_date->getTimestamp()
-            if ($z_date->getTimestamp() > $curr_date->getTimestamp()) {
-                continue;
-            }
             foreach ($fields as $field => $value) {
                 $uses[] = [
                     'object_id' => $row['object_id'],

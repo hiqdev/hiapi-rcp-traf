@@ -11,7 +11,7 @@
 namespace hiapi\rcptraf\collectors;
 
 use hiapi\rcptraf\utils\FileParser;
-use DateTime;
+use DateTimeImmutable;
 
 abstract class AbstractCollector
 {
@@ -20,6 +20,8 @@ abstract class AbstractCollector
     protected $type;
 
     protected $params;
+
+    protected $minTime;
 
     public $keys = ['name'];
 
@@ -40,7 +42,7 @@ abstract class AbstractCollector
 
     public function getType()
     {
-        return $this->tupe;
+        return $this->type;
     }
 
     public function collectAll()
@@ -81,11 +83,32 @@ abstract class AbstractCollector
 
     public function getFiles()
     {
-        $dir = $this->dataDir . '/' . strtoupper($this->type);
-        $curr = new DateTime();
-        $prev = new DateTime('midnight first day of previous month');
+        $max = new DateTimeImmutable();
+        $min = $this->getMinTime();
+        $cur = $min;
 
-        return [$dir ."/" . $prev->format('Y-m') . "*", $dir . "/" . $curr->format('Y-m') . "*"];
+        $files = [];
+        while ($cur->getTimestamp() < $max->getTimestamp()) {
+            $files[] = implode('/', [$this->dataDir, strtoupper($this->type), $cur->format('Y-m') . '*']);
+            $cur = $cur->modify('next month');
+        }
+
+        return $files;
+    }
+
+    public function getMinTime()
+    {
+        if ($this->minTime === null) {
+            if (isset($this->params['min_time'])) {
+                $time = new DateTimeImmutable($this->params['min_time']);
+            }
+            if (empty($time)) {
+                $time = new DateTimeImmutable('midnight first day of previous month');
+            }
+            $this->minTime = $time;
+        }
+
+        return $this->minTime;
     }
 
     public function usesSet(array $uses)

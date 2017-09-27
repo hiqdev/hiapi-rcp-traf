@@ -10,8 +10,6 @@
 
 namespace hiapi\rcptraf\utils;
 
-use DateTime;
-
 class Ssh
 {
     public $user = 'root';
