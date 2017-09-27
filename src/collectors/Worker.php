@@ -92,7 +92,7 @@ class Worker
     protected function putConfig()
     {
         $config = $this->collector->buildConfig($this->ip);
-        if ($config === null) {
+        if (null === $config) {
             return null;
         }
 
@@ -117,10 +117,9 @@ class Worker
     protected function copyData()
     {
         $dest = $this->getTmpFile('data');
-        $files = implode(" ", $this->collector->getFiles());
+        $files = implode(' ', $this->collector->getFiles());
         $this->ssh->run("/bin/cat $files", "> $dest 2> /dev/null");
 
         return $dest;
     }
-
 }

@@ -36,7 +36,7 @@ class Ssh
 
     public function getPort()
     {
-        if ($this->port === null) {
+        if (null === $this->port) {
             $this->port = $this->detectPort();
         }
 
@@ -63,7 +63,6 @@ class Ssh
         }
         $quoted = escapeshellarg($remoteCommand);
         $command = "ssh {$this->options} -p{$this->port} {$this->user}@{$this->ip} $quoted $more";
-    var_dump($command);
         exec($command);
     }
 
@@ -81,7 +80,6 @@ class Ssh
         }
         $src = escapeshellarg($src);
         $command = "scp {$this->options} -P{$this->port} $src {$this->user}@{$this->ip}:$remoteDst";
-    var_dump($command);
         exec($command);
     }
 }

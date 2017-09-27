@@ -20,13 +20,13 @@ class ServerTraf95Collector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_LAST;
 
-    public $configPath = "/usr/local/rcp/etc/NEW.agg95.list.NEW";
+    public $configPath = '/usr/local/rcp/etc/NEW.agg95.list.NEW';
 
     public function findObjects()
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => [ 'cond'=>'in', 'check'=>'ids', 'sql'=>'s.obj_id' ],
+                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'s.obj_id'],
             ],
             'query' => "
                 WITH obs AS (
@@ -72,6 +72,6 @@ class ServerTraf95Collector extends AbstractCollector
             HAVING      count( *)>1
         ");
 
-        return $this->renderConfig($rows, "127.127.127.127 %-15s   %s");
+        return $this->renderConfig($rows, '127.127.127.127 %-15s   %s');
     }
 }

@@ -10,8 +10,8 @@
 
 namespace hiapi\rcptraf\collectors;
 
-use hiapi\rcptraf\utils\FileParser;
 use DateTimeImmutable;
+use hiapi\rcptraf\utils\FileParser;
 
 abstract class AbstractCollector
 {
@@ -98,7 +98,7 @@ abstract class AbstractCollector
 
     public function getMinTime()
     {
-        if ($this->minTime === null) {
+        if (null === $this->minTime) {
             if (isset($this->params['min_time'])) {
                 $time = new DateTimeImmutable($this->params['min_time']);
             }

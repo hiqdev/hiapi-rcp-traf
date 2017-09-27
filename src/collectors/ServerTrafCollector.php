@@ -20,7 +20,7 @@ class ServerTrafCollector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_SUM;
 
-    public $configPath = "/usr/local/rcp/etc/NEW.switch_list.NEW";
+    public $configPath = '/usr/local/rcp/etc/NEW.switch_list.NEW';
 
     public function findObjects()
     {
@@ -69,6 +69,6 @@ class ServerTrafCollector extends AbstractCollector
             ORDER BY    bt.name,sw.ip
         ");
 
-        return $this->renderConfig($rows, "%-15s %-2s %-20s %s");
+        return $this->renderConfig($rows, '%-15s %-2s %-20s %s');
     }
 }

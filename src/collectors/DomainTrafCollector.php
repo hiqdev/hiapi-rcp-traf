@@ -24,7 +24,7 @@ class DomainTrafCollector extends AbstractCollector
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => [ 'cond'=>'in', 'check'=>'ids', 'sql'=>'w.obj_id' ],
+                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'w.obj_id'],
             ],
             'query' => "
                 WITH domains AS (
