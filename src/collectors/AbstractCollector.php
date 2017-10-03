@@ -83,12 +83,12 @@ abstract class AbstractCollector
 
     public function getFiles()
     {
-        $max = new DateTimeImmutable();
         $min = $this->getMinTime();
-        $cur = $min;
+        $max = new DateTimeImmutable();
+        $cur = $min->modify('first day of this month');
 
         $files = [];
-        while ($cur->getTimestamp() < $max->getTimestamp()) {
+        while ($cur->getTimestamp() <= $max->getTimestamp()) {
             $files[] = implode('/', [$this->dataDir, strtoupper($this->type), $cur->format('Y-m') . '*']);
             $cur = $cur->modify('next month');
         }
