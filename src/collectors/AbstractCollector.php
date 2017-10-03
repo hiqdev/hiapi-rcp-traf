@@ -91,7 +91,7 @@ abstract class AbstractCollector
             $files[] = implode('/', [$this->dataDir, strtoupper($this->type), $cur->format('Y-m') . '*']);
             $cur = $cur->modify('next month');
         }
-        var_dump($files);die();
+
         return $files;
     }
 
