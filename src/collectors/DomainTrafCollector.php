@@ -24,8 +24,10 @@ class DomainTrafCollector extends AbstractCollector
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'w.obj_id'],
+                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'o.obj_id'],
             ],
+            '$last_time_join_cond' => $this->getLastTimeJoinCond(),
+            '$last_time_select_cond' => $this->getLastTimeSelectCond(),
             'query' => "
                 WITH domains AS (
                     SELECT      min(obj_id) AS obj_id,max(ip_id) AS ip_id,name,account_id
@@ -43,8 +45,9 @@ class DomainTrafCollector extends AbstractCollector
                     JOIN        soft        s ON s.obj_id = i.soft_id AND s.name = 'rcp_stats_domain_traf_counter'
                     WHERE       d.state_id=zstate_id('device,ok')
                 )
-                SELECT      w.obj_id as object_id, w.account||' '||w.name AS object,
-                            w.account, w.device_id, w.device_ip, w.group
+                SELECT      o.obj_id as object_id, o.account||' '||o.name AS object,
+                            o.account, o.device_id, o.device_ip, o.group,
+                            \$last_time_select_cond AS last_time
                 FROM        (
                     SELECT      d.obj_id, d.name, a.login AS account,
                                 v.obj_id AS device_id, v.name AS group, v.ip AS device_ip
@@ -53,9 +56,10 @@ class DomainTrafCollector extends AbstractCollector
                     JOIN        service     s ON s.obj_id = i.service_id
                     JOIN        devices     v ON v.obj_id = s.device_id
                     JOIN        account     a ON a.obj_id = d.account_id
-                )           AS          w
+                )           AS          o
+                \$last_time_join_cond
                 WHERE       TRUE \$filter_cond
-                ORDER BY    w.group
+                ORDER BY    o.group
             ",
         ]);
     }

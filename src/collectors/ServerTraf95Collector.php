@@ -26,8 +26,10 @@ class ServerTraf95Collector extends AbstractCollector
     {
         return $this->tool->base->smartSearch($this->params, [
             'filters' => [
-                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'s.obj_id'],
+                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'o.obj_id'],
             ],
+            '$last_time_select_cond' => $this->getLastTimeSelectCond(),
+            '$last_time_join_cond' => $this->getLastTimeJoinCond(),
             'query' => "
                 WITH obs AS (
                     SELECT      s.obj_id,l.zport,l.switch_id
@@ -44,13 +46,15 @@ class ServerTraf95Collector extends AbstractCollector
                     JOIN        value           v ON v.obj_id=w.obj_id AND v.prop_id=prop_id('device,switch:traf_server_id')
                     WHERE       w.type_id=switch_type_id('net')
                 )
-                SELECT      s.obj_id AS object_id,
-                            coalesce(host(w.ip),w.name)||' '||coalesce(s.zport,'') AS object,
+                SELECT      o.obj_id AS object_id,
+                            coalesce(host(w.ip),w.name)||' '||coalesce(o.zport,'') AS object,
                             t.ip AS group,w.obj_id AS switch_id,
-                            t.obj_id AS device_id,t.ip AS device_ip
-                FROM        obs         s
-                JOIN        sws         w ON w.obj_id=s.switch_id
+                            t.obj_id AS device_id,t.ip AS device_ip,
+                            \$last_time_select_cond AS last_time
+                FROM        obs         o
+                JOIN        sws         w ON w.obj_id=o.switch_id
                 JOIN        device      t ON t.obj_id=w.traf_server_id AND t.state_id!=zstate_id('device,deleted')
+                \$last_time_join_cond
                 WHERE       TRUE \$filter_cond
                 ORDER BY    \"group\"
             ",
