@@ -50,7 +50,7 @@ class DomainTrafCollector extends AbstractCollector
                             \$last_time_select_cond AS last_time
                 FROM        (
                     SELECT      d.obj_id, d.name, a.login AS account,
-                                v.obj_id AS device_id, v.name AS group, v.ip AS device_ip,
+                                v.obj_id AS device_id, v.name AS group, v.ip AS device_ip
                     FROM        domains     d
                     JOIN        ip          i ON i.obj_id = d.ip_id
                     JOIN        service     s ON s.obj_id = i.service_id
@@ -59,7 +59,7 @@ class DomainTrafCollector extends AbstractCollector
                 )           AS          o
                 \$last_time_join_cond
                 WHERE       TRUE \$filter_cond
-                ORDER BY    w.group
+                ORDER BY    o.group
             ",
         ]);
     }

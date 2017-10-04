@@ -26,8 +26,8 @@ class MailDuCollector extends AbstractCollector
             'filters' => [
                 'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'o.obj_id'],
             ],
-            '$last_time_join_cond' => $this->getLastTimeSelectCond(),
-            '$last_time_select_cond' => $this->getLastTimeJoinCond(),
+            '$last_time_select_cond' => $this->getLastTimeSelectCond(),
+            '$last_time_join_cond' => $this->getLastTimeJoinCond(),
             'query' => "
                 SELECT      o.obj_id AS object_id, o.obj_id AS object,
                             v.ip AS group,
