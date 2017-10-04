@@ -128,7 +128,7 @@ abstract class AbstractCollector
         return $res;
     }
 
-    protected function getLastTimeJoinCond()
+    protected function buildLastTimeJoin()
     {
         if (isset($this->params['min_time'])) {
             return '';
@@ -141,20 +141,33 @@ abstract class AbstractCollector
                 WHERE       time >= date_trunc('month', now() - '1 month'::interval)
                     AND     type_id = ztype_id('bill,overuse,{$this->type}')
                 GROUP BY    object_id
-            )           AS      mt ON mt.object_id = o.obj_id";
+            )           AS      mt ON mt.object_id = o.obj_id
+        ";
     }
 
-    protected function getLastTimeSelectCond()
+    protected function buildLastTimeSelect()
     {
         if (isset($this->params['min_time'])) {
             return "'{$this->params['min_time']}'::date";
         }
 
         return "
-            (CASE WHEN mt.last_time IS NOT NULL THEN
-                mt.last_time - '1 day'::interval
-            ELSE
-                date_trunc('month', now() - '1 month'::interval)
-            END)::date";
+            (CASE
+                WHEN mt.last_time IS NOT NULL
+                THEN mt.last_time - '1 day'::interval
+                ELSE date_trunc('month', now() - '1 month'::interval)
+            END)::date
+        ";
+    }
+
+    protected function queryObjects($vars)
+    {
+        return $this->tool->base->smartSearch($this->params, array_merge([
+            'filters' => [
+                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'o.obj_id'],
+            ],
+            '$last_time_select' => $this->buildLastTimeSelect(),
+            '$last_time_join' => $this->buildLastTimeJoin(),
+        ], $vars));
     }
 }
