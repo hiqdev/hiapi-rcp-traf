@@ -96,19 +96,47 @@ abstract class AbstractCollector
         return $files;
     }
 
-    public function getMinTime()
+    public function getMaxTime()
     {
-        if (null === $this->minTime) {
-            if (isset($this->params['min_time'])) {
-                $time = new DateTimeImmutable($this->params['min_time']);
-            }
-            if (empty($time)) {
-                $time = new DateTimeImmutable('midnight first day of previous month');
-            }
-            $this->minTime = $time;
+        if (null === $this->maxTime) {
+            $this->maxTime = $this->buildTime($this->params['max_time'], 'now');
+        }
+
+        return $this->maxTime;
+    }
+
+    public function getMinTime($last = null)
+    {
+        if ($last) {
+            return $this->findMinTime($last);
+        }
+        if ($this->minTime === null) {
+            $this->minTime = $this->buildTime($this->params['min_time'], 'midnight first day of previous month');
         }
 
         return $this->minTime;
+    }
+
+    protected function findMinTime($last)
+    {
+        $laststamp = strtotime($last);
+        if ($laststamp && $laststamp<$this->getMinTime()) {
+            return DateTimeImmutable($last);
+        }
+
+        return $this->getMinTime();
+    }
+
+    protected function buildTime($time, $default)
+    {
+        if (isset($time)) {
+            $time = new DateTimeImmutable($time);
+        }
+        if (empty($time)) {
+            $time = new DateTimeImmutable($default);
+        }
+
+        return $time;
     }
 
     public function usesSet(array $uses)

@@ -63,8 +63,8 @@ class Worker
         if (!$values) {
             return;
         }
-        $min = $this->collector->getMinTime()->getTimestamp();
-        $max = strtotime('now');
+        $min = $this->collector->getMinTime($row['last_time'])->getTimestamp();
+        $max = $this->collector->getMaxTime()->getTimestamp();
         $uses = [];
         foreach ($values as $date => $fields) {
             if (!preg_match('/[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}/', $date, $matches)) {
@@ -78,10 +78,6 @@ class Worker
             }
 
             foreach ($fields as $field => $value) {
-                if ($cur < strtotime($row['last_time'])) {
-                    continue;
-                }
-
                 $uses[] = [
                     'object_id' => $row['object_id'],
                     'type'      => $field,
