@@ -78,6 +78,10 @@ class Worker
             }
 
             foreach ($fields as $field => $value) {
+                if ($cur < strtotime($row['last_time'])) {
+                    continue;
+                }
+
                 $uses[] = [
                     'object_id' => $row['object_id'],
                     'type'      => $field,
