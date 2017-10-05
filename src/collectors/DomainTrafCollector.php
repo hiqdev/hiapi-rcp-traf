@@ -22,12 +22,7 @@ class DomainTrafCollector extends AbstractCollector
 
     public function findObjects()
     {
-        return $this->tool->base->smartSearch($this->params, [
-            'filters' => [
-                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'o.obj_id'],
-            ],
-            '$last_time_join_cond' => $this->getLastTimeJoinCond(),
-            '$last_time_select_cond' => $this->getLastTimeSelectCond(),
+        return $this->queryObjects([
             'query' => "
                 WITH domains AS (
                     SELECT      min(obj_id) AS obj_id,max(ip_id) AS ip_id,name,account_id
@@ -47,7 +42,7 @@ class DomainTrafCollector extends AbstractCollector
                 )
                 SELECT      o.obj_id as object_id, o.account||' '||o.name AS object,
                             o.account, o.device_id, o.device_ip, o.group,
-                            \$last_time_select_cond AS last_time
+                            \$last_time_select AS last_time
                 FROM        (
                     SELECT      d.obj_id, d.name, a.login AS account,
                                 v.obj_id AS device_id, v.name AS group, v.ip AS device_ip
@@ -57,7 +52,7 @@ class DomainTrafCollector extends AbstractCollector
                     JOIN        devices     v ON v.obj_id = s.device_id
                     JOIN        account     a ON a.obj_id = d.account_id
                 )           AS          o
-                \$last_time_join_cond
+                \$last_time_join
                 WHERE       TRUE \$filter_cond
                 ORDER BY    o.group
             ",
