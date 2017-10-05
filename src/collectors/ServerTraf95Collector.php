@@ -24,12 +24,7 @@ class ServerTraf95Collector extends AbstractCollector
 
     public function findObjects()
     {
-        return $this->tool->base->smartSearch($this->params, [
-            'filters' => [
-                'object_ids' => ['cond'=>'in', 'check'=>'ids', 'sql'=>'o.obj_id'],
-            ],
-            '$last_time_select_cond' => $this->getLastTimeSelectCond(),
-            '$last_time_join_cond' => $this->getLastTimeJoinCond(),
+        return $this->queryObjects([
             'query' => "
                 WITH obs AS (
                     SELECT      s.obj_id,l.zport,l.switch_id
@@ -50,11 +45,11 @@ class ServerTraf95Collector extends AbstractCollector
                             coalesce(host(w.ip),w.name)||' '||coalesce(o.zport,'') AS object,
                             t.ip AS group,w.obj_id AS switch_id,
                             t.obj_id AS device_id,t.ip AS device_ip,
-                            \$last_time_select_cond AS last_time
+                            \$last_time_select AS last_time
                 FROM        obs         o
                 JOIN        sws         w ON w.obj_id=o.switch_id
                 JOIN        device      t ON t.obj_id=w.traf_server_id AND t.state_id!=zstate_id('device,deleted')
-                \$last_time_join_cond
+                \$last_time_join
                 WHERE       TRUE \$filter_cond
                 ORDER BY    \"group\"
             ",

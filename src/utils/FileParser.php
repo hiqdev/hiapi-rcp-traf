@@ -35,6 +35,8 @@ class FileParser
 
     public function parse($path)
     {
+        $this->data = [];
+
         foreach (file($path) as $entry) {
             $items = preg_split('/\s+/', trim($entry));
             $date = array_shift($items);

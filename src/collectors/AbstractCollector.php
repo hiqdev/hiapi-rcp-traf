@@ -52,8 +52,9 @@ abstract class AbstractCollector
             return true;
         }
 
+        $parser = new FileParser($this->keys, $this->fields, $this->aggregation);
+
         foreach ($groups as $group) {
-            $parser = new FileParser($this->keys, $this->fields, $this->aggregation);
             $worker = new Worker($this, $parser, $group['device_ip'], $group['objects']);
             $worker->collect();
         }
