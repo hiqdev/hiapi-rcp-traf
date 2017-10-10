@@ -168,6 +168,7 @@ abstract class AbstractCollector
                 SELECT      object_id, max(time) as last_time
                 FROM        zuse
                 WHERE       time >= date_trunc('month', now() - '1 month'::interval)
+                    AND     time < date_trunc('day', now())
                     AND     type_id = ztype_id('bill,overuse,{$this->type}')
                 GROUP BY    object_id
             )           AS      mt ON mt.object_id = o.obj_id
@@ -183,7 +184,7 @@ abstract class AbstractCollector
         return "
             (CASE
                 WHEN mt.last_time IS NOT NULL
-                THEN mt.last_time - '1 day'::interval
+                THEN mt.last_time
                 ELSE date_trunc('month', now() - '1 month'::interval)
             END)::date
         ";
