@@ -22,7 +22,7 @@ class MailDuCollector extends AbstractCollector
 
     public function findObjects()
     {
-        return $this->findObjects([
+        return $this->queryObjects([
             'query' => "
                 SELECT      o.obj_id AS object_id, o.obj_id AS object,
                             v.ip AS group,
