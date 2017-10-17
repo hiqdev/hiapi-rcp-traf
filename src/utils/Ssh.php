@@ -16,7 +16,7 @@ class Ssh
 
     public $ports = [222, 22];
 
-    public $options = '-o ConnectTimeout=29 -o BatchMode=yes -o StrictHostKeyChecking=no -o VisualHostKey=no';
+    public $options = '-o ConnectTimeout=29 -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o VisualHostKey=no';
 
     public $testTimeout = 3;
 
