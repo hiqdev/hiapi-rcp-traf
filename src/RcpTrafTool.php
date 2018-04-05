@@ -21,7 +21,7 @@ class RcpTrafTool extends \hiapi\components\AbstractTool
     {
         $res = [];
         foreach ($params['types'] as $type) {
-            $collector = $this->di->get("rcptraf-tool:$type", [$this, $type, $params]);
+            $collector = $this->di->get("rcptrafTool:$type", [$this, $type, $params]);
             $res[$type] = $collector->collectAll();
         }
 

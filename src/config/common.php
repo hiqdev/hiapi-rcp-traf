@@ -11,28 +11,28 @@
 return [
     'container' => [
         'definitions' => [
-            'rcptraf-tool' => [
+            'rcptrafTool' => [
                 'class' => \hiapi\rcptraf\RcpTrafTool::class,
             ],
-            'rcptraf-tool:account_du' => [
+            'rcptrafTool:account_du' => [
                 'class' => \hiapi\rcptraf\collectors\AccountDuCollector::class,
             ],
-            'rcptraf-tool:domain_traf' => [
+            'rcptrafTool:domain_traf' => [
                 'class' => \hiapi\rcptraf\collectors\DomainTrafCollector::class,
             ],
-            'rcptraf-tool:ip_traf' => [
+            'rcptrafTool:ip_traf' => [
                 'class' => \hiapi\rcptraf\collectors\IpTrafCollector::class,
             ],
-            'rcptraf-tool:mail_du' => [
+            'rcptrafTool:mail_du' => [
                 'class' => \hiapi\rcptraf\collectors\MailDuCollector::class,
             ],
-            'rcptraf-tool:server_du' => [
+            'rcptrafTool:server_du' => [
                 'class' => \hiapi\rcptraf\collectors\ServerDuCollector::class,
             ],
-            'rcptraf-tool:server_traf' => [
+            'rcptrafTool:server_traf' => [
                 'class' => \hiapi\rcptraf\collectors\ServerTrafCollector::class,
             ],
-            'rcptraf-tool:server_traf95' => [
+            'rcptrafTool:server_traf95' => [
                 'class' => \hiapi\rcptraf\collectors\ServerTraf95Collector::class,
             ],
         ],
