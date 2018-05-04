@@ -12,28 +12,28 @@ return [
     'container' => [
         'definitions' => [
             'rcptrafTool' => [
-                'class' => \hiapi\rcptraf\RcpTrafTool::class,
+                '__class' => \hiapi\rcptraf\RcpTrafTool::class,
             ],
             'rcptrafTool:account_du' => [
-                'class' => \hiapi\rcptraf\collectors\AccountDuCollector::class,
+                '__class' => \hiapi\rcptraf\collectors\AccountDuCollector::class,
             ],
             'rcptrafTool:domain_traf' => [
-                'class' => \hiapi\rcptraf\collectors\DomainTrafCollector::class,
+                '__class' => \hiapi\rcptraf\collectors\DomainTrafCollector::class,
             ],
             'rcptrafTool:ip_traf' => [
-                'class' => \hiapi\rcptraf\collectors\IpTrafCollector::class,
+                '__class' => \hiapi\rcptraf\collectors\IpTrafCollector::class,
             ],
             'rcptrafTool:mail_du' => [
-                'class' => \hiapi\rcptraf\collectors\MailDuCollector::class,
+                '__class' => \hiapi\rcptraf\collectors\MailDuCollector::class,
             ],
             'rcptrafTool:server_du' => [
-                'class' => \hiapi\rcptraf\collectors\ServerDuCollector::class,
+                '__class' => \hiapi\rcptraf\collectors\ServerDuCollector::class,
             ],
             'rcptrafTool:server_traf' => [
-                'class' => \hiapi\rcptraf\collectors\ServerTrafCollector::class,
+                '__class' => \hiapi\rcptraf\collectors\ServerTrafCollector::class,
             ],
             'rcptrafTool:server_traf95' => [
-                'class' => \hiapi\rcptraf\collectors\ServerTraf95Collector::class,
+                '__class' => \hiapi\rcptraf\collectors\ServerTraf95Collector::class,
             ],
         ],
     ],
