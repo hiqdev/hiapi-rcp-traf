@@ -11,6 +11,7 @@
 namespace hiapi\rcptraf\collectors;
 
 use hiapi\rcptraf\utils\FileParser;
+use Yii;
 
 class ServerTraf95Collector extends AbstractCollector
 {
@@ -20,7 +21,10 @@ class ServerTraf95Collector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_LAST;
 
-    public $configPath = '/usr/local/rcp/etc/agg95.list';
+    public function getConfigPath()
+    {
+        return Yii::$app->params['servertraf95.configpath'];
+    }
 
     public function findObjects()
     {

@@ -31,13 +31,16 @@ abstract class AbstractCollector
 
     public $dataDir = '/home/LOGS';
 
-    public $configPath = '';
-
     public function __construct($tool, $type, $params)
     {
         $this->tool = $tool;
         $this->type = $type;
         $this->params = $params;
+    }
+
+    public function getConfigPath()
+    {
+        return null;
     }
 
     public function getType()
