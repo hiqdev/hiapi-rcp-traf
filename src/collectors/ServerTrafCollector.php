@@ -20,8 +20,6 @@ class ServerTrafCollector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_SUM;
 
-    public $configPath = '/usr/local/rcp/etc/switch_list';
-
     public function findObjects()
     {
         return $this->queryObjects([

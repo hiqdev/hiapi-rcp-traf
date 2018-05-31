@@ -31,9 +31,11 @@ return [
             ],
             'rcptrafTool:server_traf' => [
                 '__class' => \hiapi\rcptraf\collectors\ServerTrafCollector::class,
+                'configPath' => $params['rcptrafTool:server_traf.configPath'],
             ],
             'rcptrafTool:server_traf95' => [
                 '__class' => \hiapi\rcptraf\collectors\ServerTraf95Collector::class,
+                'configPath' => $params['rcptrafTool:server_traf95.configPath'],
             ],
         ],
     ],

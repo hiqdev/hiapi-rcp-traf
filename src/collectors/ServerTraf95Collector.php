@@ -20,8 +20,6 @@ class ServerTraf95Collector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_LAST;
 
-    public $configPath = '/usr/local/rcp/etc/agg95.list';
-
     public function findObjects()
     {
         return $this->queryObjects([
