@@ -31,6 +31,8 @@ abstract class AbstractCollector
 
     public $dataDir = '/home/LOGS';
 
+    public $configPath = '';
+
     public function __construct($tool, $type, $params)
     {
         $this->tool = $tool;
