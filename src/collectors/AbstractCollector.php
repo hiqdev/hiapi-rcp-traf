@@ -40,11 +40,6 @@ abstract class AbstractCollector
         $this->params = $params;
     }
 
-    public function getConfigPath()
-    {
-        return null;
-    }
-
     public function getType()
     {
         return $this->type;
