@@ -9,6 +9,6 @@
  */
 
 return [
-    'servertraf95.configpath' => '/usr/local/rcp/etc/agg95.list',
-    'servertraf.configpath' => '/usr/local/rcp/etc/switch_list',
+    'rcptrafTool:server_traf.configPath'    => '/usr/local/rcp/etc/switch_list',
+    'rcptrafTool:server_traf95.configPath'  => '/usr/local/rcp/etc/agg95.list',
 ];

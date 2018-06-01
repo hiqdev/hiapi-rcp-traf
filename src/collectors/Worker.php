@@ -97,7 +97,7 @@ class Worker
         }
 
         $src = $this->getTmpFile('config', $config);
-        $this->ssh->put($src, $this->collector->getConfigPath());
+        $this->ssh->put($src, $this->collector->configPath);
         unlink($src);
 
         return true;

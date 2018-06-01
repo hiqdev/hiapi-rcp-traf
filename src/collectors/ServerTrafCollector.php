@@ -21,11 +21,6 @@ class ServerTrafCollector extends AbstractCollector
 
     public $aggregation = FileParser::AGGREGATION_SUM;
 
-    public function getConfigPath()
-    {
-        return Yii::$app->params['servertraf.configpath'];
-    }
-
     public function findObjects()
     {
         return $this->queryObjects([
