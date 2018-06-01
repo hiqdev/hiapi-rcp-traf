@@ -56,10 +56,10 @@ class ServerTrafCollector extends AbstractCollector
             LEFT JOIN   value       cv ON cv.obj_id = sw.obj_id AND cv.prop_id=prop_id('device,switch:community')
             LEFT JOIN   prop        sp ON sp.obj_id = prop_id('device,switch:snmp_version_id')
             LEFT JOIN   value       sv ON sv.obj_id = sw.obj_id AND sv.prop_id=sp.obj_id
-            LEFT JOIN   type        st ON st.obj_id::text = coalesce(sv.value,sp.def)
+            LEFT JOIN   zref        st ON st.obj_id::text = coalesce(sv.value,sp.def)
             LEFT JOIN   prop        bp ON bp.obj_id = prop_id('device,switch:digit_capacity_id')
             LEFT JOIN   value       bv ON bv.obj_id = sw.obj_id AND bv.prop_id=bp.obj_id
-            LEFT JOIN   type        bt ON bt.obj_id::text = coalesce(bv.value,bp.def)
+            LEFT JOIN   zref        bt ON bt.obj_id::text = coalesce(bv.value,bp.def)
             WHERE       sw.type_id=switch_type_id('net') AND sw.ip IS NOT NULL
                 AND     sw.state_id!=zstate_id('device,deleted')
                 AND     tv.value=device_id(str2inet($ip))::text
