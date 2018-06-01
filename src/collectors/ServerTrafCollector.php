@@ -11,7 +11,6 @@
 namespace hiapi\rcptraf\collectors;
 
 use hiapi\rcptraf\utils\FileParser;
-use Yii;
 
 class ServerTrafCollector extends AbstractCollector
 {
