@@ -23,7 +23,7 @@ class ServerDuCollector extends AbstractCollector
     public function findObjects()
     {
         return $this->queryObjects([
-             'query' => "
+            'query' => "
                 WITH sws AS (
                     SELECT      w.obj_id,w.name,w.ip,str2int(v.value) AS traf_server_id
                     FROM        switch  w

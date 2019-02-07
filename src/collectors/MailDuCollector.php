@@ -24,10 +24,12 @@ class MailDuCollector extends AbstractCollector
     {
         return $this->queryObjects([
             'query' => "
-                SELECT      o.obj_id AS object_id, o.obj_id AS object,
-                            v.ip AS group,
-                            v.obj_id AS device_id, v.ip AS device_ip,
-                            \$last_time_select AS last_time
+                SELECT      o.obj_id            AS object_id,
+                            o.obj_id            AS object,
+                            v.ip                AS group,
+                            v.obj_id            AS device_id,
+                            v.ip                AS device_ip,
+                            \$last_time_select  AS last_time
                 FROM        zmail       o
                 JOIN        mx          x ON x.domain_id=o.hdomain_id AND x.mx=-1
                 JOIN        service     e ON e.obj_id=x.service_id

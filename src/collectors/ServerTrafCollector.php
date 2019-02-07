@@ -36,9 +36,9 @@ class ServerTrafCollector extends AbstractCollector
                             t.obj_id AS device_id, t.ip AS device_ip,
                             \$last_time_select AS last_time
                 FROM        device          o
-                JOIN        device2switchz  l ON l.device_id=o.obj_id
-                JOIN        sws             w ON w.obj_id=l.switch_id
-                JOIN        device          t ON t.obj_id=w.traf_server_id AND t.state_id!=zstate_id('device,deleted')
+                JOIN        device2switchz  l ON l.device_id = o.obj_id
+                JOIN        sws             w ON w.obj_id = l.switch_id
+                JOIN        device          t ON t.obj_id = w.traf_server_id AND t.state_id!=zstate_id('device,deleted')
                 \$last_time_join
                 WHERE       TRUE \$filter_cond
                 ORDER BY    \"group\"

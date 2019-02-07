@@ -24,10 +24,12 @@ class IpTrafCollector extends AbstractCollector
     {
         return $this->queryObjects([
             'query' => "
-                SELECT      o.obj_id AS object_id, o.ip AS object,
-                            v.obj_id AS device_id,v.ip AS device_ip,
-                            v.name AS group,
-                            \$last_time_select AS last_time
+                SELECT      o.obj_id            AS object_id,
+                            o.ip                AS object,
+                            v.obj_id            AS device_id,
+                            v.ip                AS device_ip,
+                            v.name              AS group,
+                            \$last_time_select  AS last_time
                 FROM        ip          o
                 JOIN        service     e ON e.obj_id=o.service_id
                 JOIN        device      v ON v.obj_id=e.device_id
