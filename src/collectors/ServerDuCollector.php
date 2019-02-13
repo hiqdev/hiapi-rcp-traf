@@ -28,7 +28,7 @@ class ServerDuCollector extends AbstractCollector
                     SELECT      w.obj_id,w.name,w.ip,str2int(v.value) AS traf_server_id
                     FROM        switch  w
                     JOIN        value   v ON v.obj_id=w.obj_id AND v.prop_id=prop_id('device,switch:traf_server_id')
-                    WHERE       w.type_id=switch_type_id('net')
+                    JOIN        type    t ON t.obj_id=w.type_id AND t.name IN ('net', 'virtual')
                 ),
                 statserver AS (
                     SELECT      st.*
