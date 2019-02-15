@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2017, HiQDev (http://hiqdev.com/)
  */
 
-return [
+$definitions = [
     'rcptrafTool' => [
         '__class' => \hiapi\rcptraf\RcpTrafTool::class,
     ],
@@ -36,3 +36,5 @@ return [
         'configPath' => $params['rcptrafTool:server_traf95.configPath'],
     ],
 ];
+
+return class_exists('Yii') ? ['container' => ['definitions' => $definitions]] : $definitions;
