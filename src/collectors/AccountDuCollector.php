@@ -23,12 +23,13 @@ class AccountDuCollector extends AbstractCollector
     public function findObjects()
     {
         return $this->queryObjects([
-             'query' => "
-                SELECT      o.obj_id AS object_id,
-                            o.login AS object,
-                            v.ip AS group,
-                            v.obj_id AS device_id, v.ip AS device_ip,
-                            \$last_time_select AS last_time
+            'query' => "
+                SELECT      o.obj_id            AS object_id,
+                            o.login             AS object,
+                            v.ip                AS group,
+                            v.obj_id            AS device_id,
+                            v.ip                AS device_ip,
+                            \$last_time_select  AS last_time
                 FROM        account     o
                 JOIN        service     e ON e.obj_id=o.service_id
                 JOIN        device      v ON v.obj_id=e.device_id AND v.state_id=zstate_id('device,ok')

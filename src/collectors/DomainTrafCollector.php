@@ -40,7 +40,8 @@ class DomainTrafCollector extends AbstractCollector
                     JOIN        soft        s ON s.obj_id = i.soft_id AND s.name = 'rcp_stats_domain_traf_counter'
                     WHERE       d.state_id=zstate_id('device,ok')
                 )
-                SELECT      o.obj_id as object_id, o.account||' '||o.name AS object,
+                SELECT      o.obj_id AS object_id,
+                            o.account||' '||o.name AS object,
                             o.account, o.device_id, o.device_ip, o.group,
                             \$last_time_select AS last_time
                 FROM        (
