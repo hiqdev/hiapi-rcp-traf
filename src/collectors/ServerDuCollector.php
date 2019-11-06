@@ -39,7 +39,7 @@ class ServerDuCollector extends AbstractCollector
                         AND     so.name IN ('rcp_server_du_counter')
                 )
                 SELECT      o.obj_id AS object_id,
-                            coalesce(host(w.ip),w.name)||' '||REPLACE(coalesce(l.zport,''), ':', '@') AS object,
+                            coalesce(host(w.ip),w.name)||' '||coalesce(l.zport,'') AS object,
                             t.ip AS group, w.obj_id AS switch_id,
                             t.obj_id AS device_id, t.ip AS device_ip,
                             \$last_time_select AS last_time

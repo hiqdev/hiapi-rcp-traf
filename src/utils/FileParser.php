@@ -42,9 +42,12 @@ class FileParser
             $date = array_shift($items);
             $keys = [];
             foreach ($this->keys as $key) {
-                $keys[$key] = array_shift($items);
+                $value = array_shift($items);
+                $keys[$key] = $key === 'port' ? str_replace('@', ':', $value) : $value;
             }
+
             $key = implode(' ', $keys);
+
             foreach ($this->fields as $field) {
                 $this->setValue($key, $date, $field, array_shift($items));
             }
