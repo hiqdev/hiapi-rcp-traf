@@ -43,7 +43,11 @@ class FileParser
             $keys = [];
             foreach ($this->keys as $key) {
                 $value = array_shift($items);
-                $keys[$key] = $key === 'port' ? str_replace('@', ':', $value) : $value;
+                if ($key === 'port') {
+                    $value = str_replace('@', ':', $value);
+                }
+
+                $keys[$key] = $value;
             }
 
             $key = implode(' ', $keys);
