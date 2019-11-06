@@ -42,12 +42,11 @@ class FileParser
             $date = array_shift($items);
             $keys = [];
             foreach ($this->keys as $key) {
-                $value = array_shift($items);
-                if ($key === 'port') {
-                    $value = str_replace('@', ':', $value);
-                }
+                $keys[$key] = array_shift($items);
+            }
 
-                $keys[$key] = $value;
+            if (!empty($keys['port'])) {
+                $keys['port'] = str_replace('@', ':', $keys['port']);
             }
 
             $key = implode(' ', $keys);
