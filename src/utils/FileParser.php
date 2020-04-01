@@ -35,9 +35,12 @@ class FileParser
 
     public function parse($path)
     {
-        $this->data = [];
+        $handle = fopen($path, "r");
+        if (empty($handle)) {
+            return ;
+        }
 
-        foreach (file($path) as $entry) {
+        while (($entry = fgets($handle)) !== false) {
             $items = preg_split('/\s+/', trim($entry));
             $date = array_shift($items);
             $keys = [];
@@ -52,9 +55,15 @@ class FileParser
             $key = implode(' ', $keys);
 
             foreach ($this->fields as $field) {
-                $this->setValue($key, $date, $field, array_shift($items));
+                try {
+                    $this->setValue($key, $date, $field, array_shift($items));
+                } catch (\Exception $e) {
+                    throw new \Exception($e->getMessage());
+                }
             }
         }
+
+        fclose($handle);
     }
 
     public function setValue($key, $date, $field, $value)
