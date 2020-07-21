@@ -54,6 +54,10 @@ class FileParser
 
             $key = implode(' ', $keys);
 
+            if (empty($this->objects[$key])) {
+                continue ;
+            }
+
             foreach ($this->fields as $field) {
                 try {
                     $this->setValue($key, $date, $field, array_shift($items));
@@ -64,6 +68,18 @@ class FileParser
         }
 
         fclose($handle);
+    }
+
+    /**
+     * Set objects
+     *
+     * @param array
+     * @return self
+     */
+    public function setObjects(array $objects) : self
+    {
+        $this->objects = $objects;
+        return $this;
     }
 
     public function setValue($key, $date, $field, $value)

@@ -48,7 +48,10 @@ class Worker
         if (!$path) {
             return false;
         }
-        $this->parser->parse($path);
+        $this->parser
+            ->setObjects($this->objects)
+            ->parse($path);
+
         unlink($path);
 
         foreach ($this->objects as $object => $row) {
