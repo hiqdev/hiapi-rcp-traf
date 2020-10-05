@@ -106,7 +106,7 @@ abstract class AbstractCollector
         return $this->maxTime;
     }
 
-    public function getMinTime($last = null)
+    public function getMinTime($last = null) : DateTimeImmutable
     {
         if ($last) {
             return $this->findMinTime($last);
@@ -118,17 +118,22 @@ abstract class AbstractCollector
         return $this->minTime;
     }
 
-    protected function findMinTime($last)
+    protected function findMinTime($last) : DateTimeImmutable
     {
         $laststamp = strtotime($last);
-        if ($laststamp && $laststamp<$this->getMinTime()) {
+        $minTime = $this->getMinTime();
+        $minTimeStamp = ($minTime instanceof DateTimeImmutable)
+            ? $minTime->getTimestamp()
+            : (is_int($minTime) ? $minTime : 0);
+
+        if ($laststamp && $laststamp < $minTimeStamp) {
             return DateTimeImmutable($last);
         }
 
         return $this->getMinTime();
     }
 
-    protected function buildTime($time, $default)
+    protected function buildTime($time, $default) : DateTimeImmutable
     {
         if (isset($time)) {
             $time = new DateTimeImmutable($time);
