@@ -16,17 +16,17 @@ use hiapi\rcptraf\utils\FileParser;
 
 abstract class AbstractCollector
 {
-    protected RcpTrafTool $tool;
+    protected ?RcpTrafTool $tool = null;
 
-    protected string $type;
+    protected string $type = '';
 
-    protected array $params;
+    protected array $params = [];
 
-    protected DateTimeImmutable $minTime;
+    protected ?DateTimeImmutable $minTime = null;
 
     public array $keys = ['name'];
 
-    public array $fields;
+    public array $fields = [];
 
     public string $aggregation = FileParser::AGGREGATION_LAST;
 
