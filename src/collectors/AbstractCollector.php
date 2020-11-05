@@ -11,41 +11,42 @@
 namespace hiapi\rcptraf\collectors;
 
 use DateTimeImmutable;
+use hiapi\rcptraf\RcpTrafTool;
 use hiapi\rcptraf\utils\FileParser;
 
 abstract class AbstractCollector
 {
-    protected $tool;
+    protected RcpTrafTool $tool;
 
-    protected $type;
+    protected string $type = '';
 
-    protected $params;
+    protected array $params = [];
 
-    protected $minTime;
+    protected ?DateTimeImmutable $minTime = null;
 
-    public $keys = ['name'];
+    public array $keys = ['name'];
 
-    public $fields;
+    public array $fields = [];
 
-    public $aggregation = FileParser::AGGREGATION_LAST;
+    public string $aggregation = FileParser::AGGREGATION_LAST;
 
-    public $dataDir = '/home/LOGS';
+    public string $dataDir = '/home/LOGS';
 
-    public $configPath = '';
+    public string $configPath = '';
 
-    public function __construct($tool, $type, $params)
+    public function __construct(RcpTrafTool $tool, string $type, array $params)
     {
         $this->tool = $tool;
         $this->type = $type;
         $this->params = $params;
     }
 
-    public function getType()
+    public function getType() : string
     {
         return $this->type;
     }
 
-    public function collectAll()
+    public function collectAll() : bool
     {
         $groups = $this->groupObjects($this->findObjects());
         if (empty($groups)) {
@@ -62,8 +63,9 @@ abstract class AbstractCollector
         return true;
     }
 
-    public function groupObjects($objects)
+    public function groupObjects($objects) : array
     {
+        $res = [];
         foreach ($objects as $row) {
             $group = $row['group'];
             if (empty($res[$group]['device_ip'])) {
@@ -77,12 +79,18 @@ abstract class AbstractCollector
 
     abstract public function findObjects();
 
+    /**
+     * Build config for ip
+     *
+     * @param string $ip
+     * @return array
+     */
     public function buildConfig($ip)
     {
         return null;
     }
 
-    public function getFiles()
+    public function getFiles() : array
     {
         $min = $this->getMinTime();
         $max = new DateTimeImmutable();
@@ -97,7 +105,13 @@ abstract class AbstractCollector
         return $files;
     }
 
-    public function getMaxTime()
+    /**
+     * Return max time of syncronization
+     *
+     * @param void
+     * @return DateTimeImmutable
+     */
+    public function getMaxTime() : DateTimeImmutable
     {
         if (null === $this->maxTime) {
             $this->maxTime = $this->buildTime($this->params['max_time'], 'now');
@@ -106,7 +120,13 @@ abstract class AbstractCollector
         return $this->maxTime;
     }
 
-    public function getMinTime($last = null) : DateTimeImmutable
+    /**
+     * Return time of syncronization
+     *
+     * @param string $last
+     * @return DateTimeImmutable
+     */
+    public function getMinTime(string $last = null) : DateTimeImmutable
     {
         if ($last) {
             return $this->findMinTime($last);
@@ -118,41 +138,48 @@ abstract class AbstractCollector
         return $this->minTime;
     }
 
-    protected function findMinTime($last) : DateTimeImmutable
+    /**
+     * Calculate time
+     *
+     * @param string $last
+     * @return DateTimeImmutable
+     */
+    protected function findMinTime(string $last) : DateTimeImmutable
     {
         $laststamp = strtotime($last);
         $minTime = $this->getMinTime();
-        $minTimeStamp = ($minTime instanceof DateTimeImmutable)
-            ? $minTime->getTimestamp()
-            : (is_int($minTime) ? $minTime : 0);
 
-        if ($laststamp && $laststamp < $minTimeStamp) {
+        if ($laststamp && $laststamp < $minTime->getTimestamp()) {
             return DateTimeImmutable($last);
         }
 
         return $this->getMinTime();
     }
 
-    protected function buildTime($time, $default) : DateTimeImmutable
+    /**
+     * Create timestamp
+     *
+     * @param string $time
+     * @param string $default
+     * @return DateTimeImmutable
+     */
+    protected function buildTime(?string $time = '', string $default) : DateTimeImmutable
     {
         if (isset($time)) {
-            $time = new DateTimeImmutable($time);
-        }
-        if (empty($time)) {
-            $time = new DateTimeImmutable($default);
+            return new DateTimeImmutable($time);
         }
 
-        return $time;
+        return new DateTimeImmutable($default);
     }
 
-    public function usesSet(array $uses)
+    public function usesSet(array $uses) : void
     {
         if ($uses) {
             $this->tool->base->usesSet($uses);
         }
     }
 
-    protected function renderConfig($rows, $format)
+    protected function renderConfig(array $rows, string $format) : string
     {
         $res = '';
         foreach ($rows as $row) {
@@ -162,7 +189,7 @@ abstract class AbstractCollector
         return $res;
     }
 
-    protected function buildLastTimeJoin()
+    protected function buildLastTimeJoin() : string
     {
         if (isset($this->params['min_time'])) {
             return '';
@@ -180,7 +207,7 @@ abstract class AbstractCollector
         ";
     }
 
-    protected function buildLastTimeSelect()
+    protected function buildLastTimeSelect() : string
     {
         if (isset($this->params['min_time'])) {
             return "'{$this->params['min_time']}'::date";
@@ -195,7 +222,7 @@ abstract class AbstractCollector
         ";
     }
 
-    protected function queryObjects($vars)
+    protected function queryObjects(array $vars = []) : array
     {
         return $this->tool->base->smartSearch($this->params, array_merge([
             'filters' => [
