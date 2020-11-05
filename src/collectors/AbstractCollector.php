@@ -46,7 +46,7 @@ abstract class AbstractCollector
         return $this->type;
     }
 
-    public function collectAll()
+    public function collectAll() : bool
     {
         $groups = $this->groupObjects($this->findObjects());
         if (empty($groups)) {
@@ -172,14 +172,14 @@ abstract class AbstractCollector
         return new DateTimeImmutable($default);
     }
 
-    public function usesSet(array $uses)
+    public function usesSet(array $uses) : void
     {
         if ($uses) {
             $this->tool->base->usesSet($uses);
         }
     }
 
-    protected function renderConfig($rows, $format) : ?string
+    protected function renderConfig(array $rows, string $format) : string
     {
         $res = '';
         foreach ($rows as $row) {
@@ -189,7 +189,7 @@ abstract class AbstractCollector
         return $res;
     }
 
-    protected function buildLastTimeJoin() : ?string
+    protected function buildLastTimeJoin() : string
     {
         if (isset($this->params['min_time'])) {
             return '';
@@ -207,7 +207,7 @@ abstract class AbstractCollector
         ";
     }
 
-    protected function buildLastTimeSelect() : ?string
+    protected function buildLastTimeSelect() : string
     {
         if (isset($this->params['min_time'])) {
             return "'{$this->params['min_time']}'::date";
@@ -222,7 +222,7 @@ abstract class AbstractCollector
         ";
     }
 
-    protected function queryObjects($vars) : ?array
+    protected function queryObjects(array $vars = []) : array
     {
         return $this->tool->base->smartSearch($this->params, array_merge([
             'filters' => [
