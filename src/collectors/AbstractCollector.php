@@ -16,13 +16,13 @@ use hiapi\rcptraf\utils\FileParser;
 
 abstract class AbstractCollector
 {
-    protected ?RcpTrafTool $tool = null;
+    protected ?RcpTrafTool $tool;
 
     protected string $type = '';
 
     protected array $params = [];
 
-    protected ?DateTimeImmutable $minTime = null;
+    protected ?DateTimeImmutable $minTime;
 
     public array $keys = ['name'];
 
