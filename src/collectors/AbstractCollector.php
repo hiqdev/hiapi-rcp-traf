@@ -150,7 +150,7 @@ abstract class AbstractCollector
         $minTime = $this->getMinTime();
 
         if ($laststamp && $laststamp < $minTime->getTimestamp()) {
-            return DateTimeImmutable($last);
+            return new DateTimeImmutable($last);
         }
 
         return $this->getMinTime();
@@ -165,11 +165,7 @@ abstract class AbstractCollector
      */
     protected function buildTime(?string $time = '', string $default) : DateTimeImmutable
     {
-        if (isset($time)) {
-            return new DateTimeImmutable($time);
-        }
-
-        return new DateTimeImmutable($default);
+        return new DateTimeImmutable($time ?? $default);
     }
 
     public function usesSet(array $uses) : void
