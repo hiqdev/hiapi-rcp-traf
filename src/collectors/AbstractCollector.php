@@ -163,7 +163,7 @@ abstract class AbstractCollector
      * @param string $default
      * @return DateTimeImmutable
      */
-    protected function buildTime(string $time, string $default) : DateTimeImmutable
+    protected function buildTime(?string $time = '', string $default) : DateTimeImmutable
     {
         if (isset($time)) {
             return new DateTimeImmutable($time);
