@@ -14,11 +14,11 @@ use hiapi\rcptraf\utils\FileParser;
 
 class MailDuCollector extends AbstractCollector
 {
-    public $keys = ['obj_id'];
+    public array $keys = ['obj_id'];
 
-    public $fields = ['mail_du', 'mail_letters'];
+    public array $fields = ['mail_du', 'mail_letters'];
 
-    public $aggregation = FileParser::AGGREGATION_SUM;
+    public string $aggregation = FileParser::AGGREGATION_SUM;
 
     public function findObjects()
     {

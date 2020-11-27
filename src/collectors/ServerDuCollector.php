@@ -14,11 +14,11 @@ use hiapi\rcptraf\utils\FileParser;
 
 class ServerDuCollector extends AbstractCollector
 {
-    public $keys = ['switch_ip', 'port'];
+    public array $keys = ['switch_ip', 'port'];
 
-    public $fields = ['server_du', 'server_files', 'server_ssd', 'server_sata'];
+    public array$fields = ['server_du', 'server_files', 'server_ssd', 'server_sata'];
 
-    public $aggregation = FileParser::AGGREGATION_LAST;
+    public string $aggregation = FileParser::AGGREGATION_LAST;
 
     public function findObjects()
     {
