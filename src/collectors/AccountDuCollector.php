@@ -14,11 +14,11 @@ use hiapi\rcptraf\utils\FileParser;
 
 class AccountDuCollector extends AbstractCollector
 {
-    public $keys = ['login'];
+    public array $keys = ['login'];
 
-    public $fields = ['account_du', 'account_maxdir'];
+    public array $fields = ['account_du', 'account_maxdir'];
 
-    public $aggregation = FileParser::AGGREGATION_LAST;
+    public string $aggregation = FileParser::AGGREGATION_LAST;
 
     public function findObjects()
     {

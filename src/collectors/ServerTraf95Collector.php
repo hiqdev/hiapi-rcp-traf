@@ -14,11 +14,11 @@ use hiapi\rcptraf\utils\FileParser;
 
 class ServerTraf95Collector extends AbstractCollector
 {
-    public $keys = ['switch_ip', 'port'];
+    public array $keys = ['switch_ip', 'port'];
 
-    public $fields = ['server_traf95', 'server_traf95_in'];
+    public array $fields = ['server_traf95', 'server_traf95_in'];
 
-    public $aggregation = FileParser::AGGREGATION_LAST;
+    public string $aggregation = FileParser::AGGREGATION_LAST;
 
     public function findObjects()
     {
