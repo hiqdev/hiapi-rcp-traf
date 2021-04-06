@@ -24,6 +24,8 @@ abstract class AbstractCollector
 
     protected ?DateTimeImmutable $minTime = null;
 
+    protected ?DateTimeImmutable $maxTime = null;
+
     public array $keys = ['name'];
 
     public array $fields = [];
@@ -114,7 +116,7 @@ abstract class AbstractCollector
     public function getMaxTime() : DateTimeImmutable
     {
         if (null === $this->maxTime) {
-            $this->maxTime = $this->buildTime($this->params['max_time'], 'now');
+            $this->maxTime = $this->buildTime($this->params['max_time'] ?? null, 'now');
         }
 
         return $this->maxTime;
