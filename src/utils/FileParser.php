@@ -48,10 +48,6 @@ class FileParser
                 $keys[$key] = array_shift($items);
             }
 
-            if (!empty($keys['port'])) {
-                $keys['port'] = str_replace('@', ':', $keys['port']);
-            }
-
             $key = implode(' ', $keys);
 
             if (empty($this->objects[$key])) {
