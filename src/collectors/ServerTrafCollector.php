@@ -32,7 +32,7 @@ class ServerTrafCollector extends AbstractCollector
                 ),
                 zdevicez AS (
                     SELECT      obj_id FROM device
-                    UNION ALL
+                UNION ALL
                     SELECT  obj_id FROM target WHERE type_id = class_id('videocdn')
                 ),
                 zdevice2switchz AS (
