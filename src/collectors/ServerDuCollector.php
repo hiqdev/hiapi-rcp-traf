@@ -46,7 +46,7 @@ class ServerDuCollector extends AbstractCollector
                 zdevice2switchz AS (
                     SELECT      device_id, switch_id, zport
                     FROM        device2switchz
-                    UNION ALL
+                UNION ALL
                     SELECT      t.obj_id, s.obj_id AS switch_id, full_port(b.value, t.name) AS zport
                     FROM        target  t
                     LEFT JOIN   (
