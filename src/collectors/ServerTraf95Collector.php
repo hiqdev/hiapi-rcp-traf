@@ -29,6 +29,13 @@ class ServerTraf95Collector extends AbstractCollector
                     FROM        device          s
                     JOIN        device2switchz  l ON l.device_id=s.obj_id
                 UNION
+                    SELECT      s.obj_id, full_port(b.value, s.name) AS zport, l.obj_id AS switch_id
+                    FROM        target  s
+                    LEFT JOIN   (
+                        SELECT obj_id, type_id FROM device WHERE name = 'vCDN'
+                    )                   l ON TRUE
+                    LEFT JOIN value b ON b.obj_id = l.obj_id AND b.prop_id = prop_id('device,switch:base_port_no'::text) AND l.type_id = switch_type_id('net'::text)
+                UNION
                     SELECT      t.obj_id,t.obj_id::text,device_id('virtual95')
                     FROM        tariff          t
                     JOIN        value           c ON c.obj_id=t.obj_id AND c.prop_id=prop_id('tariff:count_resources')
